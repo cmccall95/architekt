@@ -202,32 +202,48 @@ class _BlueprintsReaderState extends State<BlueprintsReader> {
     );
   }
 
+  Future<void> doPdfProcess(String directory) async {
+    final res = await Process.run('python', [
+      _pdfUtil,
+      document!.sourceName.substring(5),
+      page.toString(),
+      (page + 1).toString(),
+      // directory,
+    ]);
+
+    final error = res.stderr as String;
+    if (error.isNotEmpty) {
+      throw Exception(error);
+    }
+  }
+
+  Future<void> doOcrProcess(String directory) async {
+    final res = await Process.run('python', [
+      _ocr,
+      '$directory/${page}_1.png',
+      '$directory/output.json',
+    ]);
+
+    final error = res.stderr as String;
+    if (error.isNotEmpty) {
+      throw Exception(error);
+    }
+  }
+
   void handleButtonTap() async {
     if (document == null) return;
 
     _showLoadingDialog();
-    final dirName = Directory.systemTemp.path +
-        '/' +
-        DateTime.now().microsecondsSinceEpoch.toString();
-
     try {
-      var result = await Process.run('python', [
-        _pdfUtil,
-        document!.sourceName.substring(5),
-        page.toString(),
-        (page + 1).toString(),
-        dirName,
-      ]);
+      final millis = DateTime.now().microsecondsSinceEpoch;
+      final dirName = '${Directory.systemTemp.path}\\$millis';
 
-      result = await Process.run('python', [
-        _ocr,
-        '$dirName/${page}_1.png',
-        '$dirName/output.json',
-      ]);
+      await doPdfProcess(dirName);
+      await doOcrProcess(dirName);
 
-      final image = await File('$dirName/${page}_1.png').readAsBytes();
+      final image = await File('$dirName\\${page}_1.png').readAsBytes();
       final output =
-          jsonDecode(await File('$dirName/output.json').readAsString());
+          jsonDecode(await File('$dirName\\output.json').readAsString());
 
       await Directory(dirName).delete(recursive: true);
       Navigator.of(context)
@@ -241,7 +257,11 @@ class _BlueprintsReaderState extends State<BlueprintsReader> {
           ),
         ));
     } catch (e) {
+      print('error applying ocr $e');
       Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error applying OCR: $e'),
+      ));
     }
   }
 
