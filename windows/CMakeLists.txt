@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(untitled LANGUAGES CXX)
+project(architekt LANGUAGES CXX)
 
-set(BINARY_NAME "untitled")
+set(BINARY_NAME "architekt")
 
 cmake_policy(SET CMP0063 NEW)
 
