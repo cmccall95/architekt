@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:archive/archive.dart';
-import 'package:arkitekt/src/components/blueprints_reader.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import '../../core/config/routes.dart';
 
 class PreLoadPage extends StatefulWidget {
   const PreLoadPage({Key? key}) : super(key: key);
@@ -86,9 +88,8 @@ class _PreLoadPageState extends State<PreLoadPage> {
     } else if (await Directory(directory.path + '\\arkitekt_ocr-master')
         .exists()) {
       if (await checkScripts()) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const BlueprintsReader(),
-        ));
+        if (!mounted) return;
+        Navigator.of(context).pushReplacementNamed(Routes.blueprint);
 
         return;
       }
@@ -141,9 +142,8 @@ class _PreLoadPageState extends State<PreLoadPage> {
     }
 
     if (await checkScripts()) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => const BlueprintsReader(),
-      ));
+      if (!mounted) return;
+      Navigator.of(context).pushReplacementNamed(Routes.blueprint);
     } else {
       setState(() {
         error = 'The Scripts are not working on your system '
