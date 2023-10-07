@@ -34,7 +34,7 @@ With FVM installed, you can use it to manage Flutter versions for your project.
 2. Install a specific Flutter version using FVM by running the following command (replace `2.10.3` with the desired version):
 
    ```shell
-   fvm install 2.10.3
+   fvm install 3.13.6
    ```
 
 ### Setting the Project's Flutter Version
@@ -42,7 +42,7 @@ With FVM installed, you can use it to manage Flutter versions for your project.
 1. Set the Flutter version for your project by running the following command (replace `2.10.3` with the desired version):
 
    ```shell
-   fvm use 2.10.3
+   fvm use 3.13.6
    ```
 
 ### Running the Project with FVM
