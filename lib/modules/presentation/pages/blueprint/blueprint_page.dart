@@ -59,23 +59,26 @@ class _BlueprintPageState extends State<BlueprintPage> {
       errorObservers: [
         Get.find<ApplyOcrController>().stateValue,
       ],
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Blueprints Reader'),
-          actions: const [
-            ExitAppButton(),
-            SizedBox(width: 12),
-            PickDocumentButton(),
-          ],
-        ),
-        body: const Column(
-          children: [
-            Expanded(
-              child: BlueprintPdf(),
-            ),
-            BlueprintFooter(),
-          ],
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text('Blueprints Reader'),
+            actions: const [
+              ExitAppButton(),
+              SizedBox(width: 12),
+              PickDocumentButton(),
+            ],
+          ),
+          body: const Column(
+            children: [
+              Expanded(
+                child: BlueprintPdf(),
+              ),
+              BlueprintFooter(),
+            ],
+          ),
         ),
       ),
     );

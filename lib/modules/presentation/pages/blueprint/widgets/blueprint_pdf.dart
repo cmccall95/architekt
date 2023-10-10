@@ -1,44 +1,82 @@
+import 'package:arkitekt/modules/presentation/pages/blueprint/widgets/blueprint_columns.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdfx/pdfx.dart';
 
 import '../../../../application/blueprint_pdf_controller.dart';
+import 'blueprint_canvas.dart';
 
 class BlueprintPdf extends StatelessWidget {
   const BlueprintPdf({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Obx(() {
-        final controller = Get.find<BlueprintPdfController>();
+    return const Row(
+      children: [
+        BlueprintColumns(),
+        VerticalDivider(width: 0),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Row(
+              children: [
+                _PreviousButton(),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Center(
+                    child: _Blueprint(),
+                  ),
+                ),
+                SizedBox(width: 10),
+                _NextButton(),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
-        final pdfController = controller.pdfController.value;
-        if (pdfController == null) {
-          return const SizedBox.shrink();
-        }
+class _Blueprint extends StatelessWidget {
+  const _Blueprint({super.key});
 
-        return Row(
-          children: [
-            const _PreviousButton(),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: InteractiveViewer(
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final controller = Get.find<BlueprintPdfController>();
+      final pdfController = controller.pdfController.value;
+      if (pdfController == null) {
+        return const SizedBox.shrink();
+      }
+
+      return AspectRatio(
+        aspectRatio: 1.4142 / 1,
+        child: Container(
+          color: Colors.green.withOpacity(0.2),
+          child: LayoutBuilder(builder: (context, constraints) {
+            final canvasWidth = constraints.maxWidth;
+            final canvasHeight = constraints.maxHeight;
+
+            return Stack(
+              children: [
+                InteractiveViewer(
                   child: PdfView(
                     controller: pdfController,
                     physics: const NeverScrollableScrollPhysics(),
                     onPageChanged: (newPage) => controller.page.value = newPage,
                   ),
                 ),
-              ),
-            ),
-            const _NextButton(),
-          ],
-        );
-      }),
-    );
+                BlueprintCanvas(
+                  width: canvasWidth,
+                  height: canvasHeight,
+                ),
+              ],
+            );
+          }),
+        ),
+      );
+    });
   }
 }
 
