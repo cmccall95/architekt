@@ -51,7 +51,7 @@ class _Blueprint extends StatelessWidget {
       }
 
       return AspectRatio(
-        aspectRatio: 1.4142 / 1,
+        aspectRatio: 1224.0 / 792.0,
         child: Container(
           color: Colors.green.withOpacity(0.2),
           child: LayoutBuilder(builder: (context, constraints) {
