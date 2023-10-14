@@ -1,8 +1,8 @@
-import 'package:arkitekt/modules/domain/column_name.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../application/blueprint_controller.dart';
+import '../../../../domain/column_name.dart';
 import '../../../../domain/highlight_rect.dart';
 
 class ColumnItem extends StatefulWidget {
