@@ -20,13 +20,13 @@ class AsyncHelper extends StatefulWidget {
 }
 
 class _AsyncHelperState extends State<AsyncHelper> {
-  late final Worker _everAll;
+  late final Worker _everAllError;
 
   @override
   void initState() {
     super.initState();
 
-    _everAll = everAll(widget.loadingObservers, (value) {
+    _everAllError = everAll(widget.errorObservers, (value) {
       final value_ = value as AsyncValue;
       if (value_.hasError) {
         showDialog(
@@ -44,7 +44,7 @@ class _AsyncHelperState extends State<AsyncHelper> {
 
   @override
   void dispose() {
-    _everAll.dispose();
+    _everAllError.dispose();
     super.dispose();
   }
 
@@ -53,27 +53,28 @@ class _AsyncHelperState extends State<AsyncHelper> {
     return Stack(
       children: [
         widget.child,
-        Obx(() {
-          final isLoading = widget.loadingObservers.any((element) {
-            return element.value.isLoading;
-          });
+        if (widget.loadingObservers.isNotEmpty)
+          Obx(() {
+            final isLoading = widget.loadingObservers.any((element) {
+              return element.value.isLoading;
+            });
 
-          if (isLoading) {
-            return Positioned.fill(
-              child: WillPopScope(
-                onWillPop: () async => false,
-                child: const ColoredBox(
-                  color: Colors.black54,
-                  child: Center(
-                    child: CircularProgressIndicator(),
+            if (isLoading) {
+              return Positioned.fill(
+                child: WillPopScope(
+                  onWillPop: () async => false,
+                  child: const ColoredBox(
+                    color: Colors.black54,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ),
-              ),
-            );
-          }
+              );
+            }
 
-          return const SizedBox.shrink();
-        }),
+            return const SizedBox.shrink();
+          }),
       ],
     );
   }

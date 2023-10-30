@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../application/blueprint_controller.dart';
-import '../../../../domain/column_name.dart';
+import '../../../../domain/m_t_o_fields.dart';
 import '../../../../domain/highlight_rect.dart';
 
 class ColumnItem extends StatefulWidget {
@@ -23,7 +23,7 @@ class _ColumnItemState extends State<ColumnItem> {
 
   OverlayEntry? _overlayEntry;
 
-  void _onChangeColumnName(ColumnName column) {
+  void _onChangeColumnName(MTOField column) {
     final controller = Get.find<BlueprintController>();
     final rect = controller.highlightRects[widget.index];
     controller.highlightRects[widget.index] = rect.copyWith(columnName: column);
@@ -138,7 +138,7 @@ class _ColumnNamesDropdown extends StatelessWidget {
   });
 
   final HighlightRect rect;
-  final ValueChanged<ColumnName> onSelected;
+  final ValueChanged<MTOField> onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -151,9 +151,9 @@ class _ColumnNamesDropdown extends StatelessWidget {
         ),
         child: ListView.builder(
           shrinkWrap: true,
-          itemCount: ColumnName.values.length,
+          itemCount: MTOField.values.length,
           itemBuilder: (context, index) {
-            final columnName = ColumnName.values[index];
+            final columnName = MTOField.values[index];
             final isCurrent = columnName == rect.columnName;
 
             return ListTile(

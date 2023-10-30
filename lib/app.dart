@@ -1,3 +1,4 @@
+import 'package:arkitekt/core/config/database_helper.dart';
 import 'package:arkitekt/core/config/routes.dart';
 import 'package:arkitekt/core/config/theme.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,14 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const PreLoadPage(),
       getPages: Routes.pages,
+      initialBinding: _InitialBindings(),
     );
+  }
+}
+
+class _InitialBindings extends Bindings {
+  @override
+  void dependencies() {
+    Get.put<DatabaseHelper>(DatabaseHelper());
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'column_name.dart';
+import 'm_t_o_fields.dart';
 
 class HighlightRect {
   HighlightRect({
@@ -14,7 +14,7 @@ class HighlightRect {
         relativeY1 = relativeY1.clamp(0, 1),
         relativeY2 = relativeY2.clamp(0, 1);
 
-  final ColumnName? columnName;
+  final MTOField? columnName;
   final double relativeX1;
   final double relativeY1;
   final double relativeX2;
@@ -62,7 +62,7 @@ class HighlightRect {
   }
 
   HighlightRect copyWith({
-    ColumnName? columnName,
+    MTOField? columnName,
     double? relativeX1,
     double? relativeX2,
     double? relativeY1,
