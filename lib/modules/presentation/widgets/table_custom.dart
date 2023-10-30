@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../../core/utils/types.dart';
 import '../../domain/m_t_o_fields.dart';
-import 'table_field_editor.dart';
 
 part 'table_custom_body.dart';
 part 'table_custom_header.dart';
@@ -96,7 +95,6 @@ class _TableCustomState extends State<TableCustom> {
       cellAlignment: cellAlignment,
       child: Column(
         children: [
-          const TableFieldEditor(),
           widget.headerBuilder(_headerScrollController),
           Expanded(child: widget.bodyBuilder(_bodyScrollController)),
         ],

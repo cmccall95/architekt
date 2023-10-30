@@ -85,6 +85,18 @@ class _MTOTableCell extends StatelessWidget {
   final MTO row;
   final MTOField column;
 
+  void _updateField({
+    required MTO mto,
+    required MTOField column,
+    required String value,
+  }) {
+    final controller = Get.find<UpdateMTOController>();
+    final json = mto.toJson();
+    json[column.value] = value;
+
+    controller.updateMTO(MTO.fromJson(json));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -96,6 +108,25 @@ class _MTOTableCell extends StatelessWidget {
       final isSameColumn = selectedColumn?.value == column.value;
 
       final isSelected = isSameRow && isSameColumn;
+
+      Widget child = Text(value ?? '');
+      if (isSelected) {
+        child = TextFormField(
+          initialValue: value,
+          autofocus: true,
+          onChanged: (value) {
+            _updateField(
+              mto: row,
+              column: column,
+              value: value,
+            );
+          },
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+            isCollapsed: true,
+          ),
+        );
+      }
 
       return TableCustomCell(
         onTap: () {
@@ -111,7 +142,7 @@ class _MTOTableCell extends StatelessWidget {
           Get.find<EditTableRowController>().column.value = column_;
         },
         isSelected: isSelected,
-        child: Text(value ?? '-'),
+        child: child,
       );
     });
   }
