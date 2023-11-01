@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:arkitekt/core/config/logger_custom.dart';
 import 'package:arkitekt/modules/domain/m_t_o.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +24,7 @@ class TableCustom extends StatefulWidget {
     this.borderWidth = 0.5,
     this.selectedBorderColor = Colors.blue,
     this.selectedBorderWidth = 2.0,
-    this.cellPadding = const EdgeInsets.all(8),
+    this.cellPadding = const EdgeInsets.symmetric(horizontal: 8),
     this.cellAlignment = Alignment.centerLeft,
   }) : super(key: key);
 

@@ -109,26 +109,9 @@ class _MTOTableCell extends StatelessWidget {
 
       final isSelected = isSameRow && isSameColumn;
 
-      Widget child = Text(value ?? '');
-      if (isSelected) {
-        child = TextFormField(
-          initialValue: value,
-          autofocus: true,
-          onChanged: (value) {
-            _updateField(
-              mto: row,
-              column: column,
-              value: value,
-            );
-          },
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            isCollapsed: true,
-          ),
-        );
-      }
-
-      return TableCustomCell(
+      return TableCustomCell.textField(
+        value: value,
+        isSelected: isSelected,
         onTap: () {
           MTO? row_ = row;
           MTOField? column_ = column;
@@ -141,8 +124,13 @@ class _MTOTableCell extends StatelessWidget {
           Get.find<EditTableRowController>().row.value = row_;
           Get.find<EditTableRowController>().column.value = column_;
         },
-        isSelected: isSelected,
-        child: child,
+        onChanged: (value) {
+          _updateField(
+            mto: row,
+            column: column,
+            value: value.toString(),
+          );
+        },
       );
     });
   }
