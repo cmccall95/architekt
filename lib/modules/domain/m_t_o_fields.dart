@@ -18,7 +18,13 @@ enum MTOField {
   insulationType('insulation_type'),
   insulationThickness('insulation_thickness'),
   processLineList('process_line_list'),
-  documents('documents');
+  pos('pos'),
+  ident('ident'),
+  npd('npd'),
+  documents('documents'),
+  ptnd('ptnd'),
+  size('size'),
+  ;
 
   const MTOField(this.value);
   final String value;
@@ -45,6 +51,11 @@ enum MTOField {
       MTOField.insulationThickness => 'Insulation Thickness',
       MTOField.processLineList => 'Process Line List',
       MTOField.documents => 'Documents',
+      MTOField.pos => 'POS',
+      MTOField.ident => 'IDENT',
+      MTOField.npd => 'NPD',
+      MTOField.ptnd => 'PTND',
+      MTOField.size => 'Size',
     };
   }
 }

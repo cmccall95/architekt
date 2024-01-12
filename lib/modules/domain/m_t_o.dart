@@ -3,6 +3,7 @@ import 'm_t_o_fields.dart';
 class MTO {
   MTO({
     required this.databaseId,
+    this.databaseCount,
     this.id,
     this.drawing,
     this.sheet,
@@ -23,14 +24,20 @@ class MTO {
     this.insulationThickness,
     this.processLineList,
     this.documents,
+    this.pos,
+    this.ident,
+    this.npd,
+    this.ptnd,
+    this.size,
   });
 
   factory MTO.fromJson(Map<String, dynamic> json) => MTO(
         databaseId: json['database_id'],
+        databaseCount: json['database_count'],
         id: json[MTOField.id.value],
         drawing: json[MTOField.drawing.value],
-        sheet: json[MTOField.sheet.value],
-        lineNumber: json[MTOField.lineNumber.value],
+        sheet: json[MTOField.sheet.value]?.toString(),
+        lineNumber: json[MTOField.lineNumber.value]?.toString(),
         pipeSpec: json[MTOField.pipeSpec.value],
         paintSpec: json[MTOField.paintSpec.value],
         insulationSpec: json[MTOField.insulationSpec.value],
@@ -47,10 +54,18 @@ class MTO {
         insulationThickness: json[MTOField.insulationThickness.value],
         processLineList: json[MTOField.processLineList.value],
         documents: json[MTOField.documents.value],
+        pos: json[MTOField.pos.value],
+        ident: json[MTOField.ident.value],
+        npd: json[MTOField.npd.value],
+        ptnd: json[MTOField.ptnd.value],
+        size: json[MTOField.size.value],
       );
 
   /// local database id
-  final int databaseId;
+  final int? databaseId;
+
+  /// sum of grouping rows
+  final int? databaseCount;
 
   final String? id;
   final String? drawing;
@@ -72,6 +87,11 @@ class MTO {
   final String? insulationThickness;
   final String? processLineList;
   final String? documents;
+  final String? pos;
+  final String? ident;
+  final String? npd;
+  final String? ptnd;
+  final String? size;
 
   String? getValueFromField(MTOField field) {
     final value = switch (field) {
@@ -95,6 +115,11 @@ class MTO {
       MTOField.insulationThickness => insulationThickness,
       MTOField.processLineList => processLineList,
       MTOField.documents => documents,
+      MTOField.pos => pos,
+      MTOField.ident => ident,
+      MTOField.npd => npd,
+      MTOField.ptnd => ptnd,
+      MTOField.size => size,
     };
 
     return value;
@@ -103,6 +128,7 @@ class MTO {
   Map<String, dynamic> toJson() {
     return {
       'database_id': databaseId,
+      'database_count': databaseCount,
       MTOField.id.value: id,
       MTOField.drawing.value: drawing,
       MTOField.sheet.value: sheet,
@@ -123,6 +149,11 @@ class MTO {
       MTOField.insulationThickness.value: insulationThickness,
       MTOField.processLineList.value: processLineList,
       MTOField.documents.value: documents,
+      MTOField.pos.value: pos,
+      MTOField.ident.value: ident,
+      MTOField.npd.value: npd,
+      MTOField.ptnd.value: ptnd,
+      MTOField.size.value: size,
     };
   }
 }
