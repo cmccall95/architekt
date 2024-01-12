@@ -66,7 +66,7 @@ class _TableCustomBodyState extends State<TableCustomBody> {
   @override
   Widget build(BuildContext context) {
     final specs = TableCustom.of(context);
-    final indexPlus = widget.isLastPage ? 1 : 0;
+    final indexPlus = widget.isLastPage ? 0 : 1;
 
     return LayoutBuilder(builder: (context, constraints) {
       final columnWidth = calculateColumnWidth(

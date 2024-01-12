@@ -55,7 +55,8 @@ class DatabaseHelper {
 }
 
 enum DataBaseTables {
-  mto('MTO');
+  mto('MTO'),
+  mtoGrouped('MTO_GROUPED');
 
   const DataBaseTables(this.value);
   final String value;

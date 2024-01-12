@@ -1,9 +1,11 @@
-import 'package:arkitekt/core/utils/types.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../core/config/database_helper.dart';
-import '../domain/m_t_o_fields.dart';
+import '../../core/config/logger_custom.dart';
+import '../../core/utils/extensions/string.dart';
+import '../../core/utils/types.dart';
 import '../domain/m_t_o.dart';
+import '../domain/m_t_o_fields.dart';
 
 class DataRepository {
   Future<void> mapJsonToDatabase(List<Map<String, dynamic>> json) async {
@@ -29,7 +31,8 @@ class DataRepository {
 
     String? orderBy_;
     if (orderBy != null) {
-      orderBy_ = '${orderBy.column} ${orderBy.ascending ? 'ASC' : 'DESC'}';
+      orderBy_ =
+          '${orderBy.column.value} ${orderBy.ascending ? 'ASC' : 'DESC'}';
     }
 
     String? where;
@@ -64,5 +67,84 @@ class DataRepository {
     if (res == 0) {
       throw 'Failed to update row';
     }
+  }
+
+  Future<List<MTO>> groupByColumn({
+    required MTOField column,
+    int? limit = 10,
+    int? offset = 0,
+    OrderBy? orderBy,
+  }) async {
+    final db = await DatabaseHelper.to.database;
+
+    String? orderBy_;
+    if (orderBy != null) {
+      orderBy_ = '${orderBy.column} ${orderBy.ascending ? 'ASC' : 'DESC'}';
+    }
+
+    final res = await db.rawQuery('''
+      SELECT ${column.value}, COUNT(*) as count
+      FROM ${DataBaseTables.mto.value}
+      GROUP BY ${column.value}
+      LIMIT $limit OFFSET $offset
+    ''');
+
+    logger.i(res);
+
+    return res.map((row) {
+      final quantityColumn = row[MTOField.quantity.value].toString();
+      final quantity = quantityColumn.toInt ?? 0;
+      final count = row['count'].toString().toInt ?? 0;
+
+      final row_ = {...row, MTOField.quantity.value: '${quantity + count}'};
+      return MTO.fromJson(row_);
+    }).toList();
+  }
+
+  Future<void> groupMTOByColumn(MTOField column) async {
+    final db = await DatabaseHelper.to.database;
+    await db.transaction((txn) async {
+      await txn.execute(
+        'DROP TABLE IF EXISTS ${DataBaseTables.mtoGrouped.value}',
+      );
+
+      await txn.execute('''
+      CREATE TABLE ${DataBaseTables.mtoGrouped.value} AS
+      SELECT *, COUNT(*) OVER(PARTITION BY ${column.value}) as database_count
+      FROM ${DataBaseTables.mto.value}
+    ''');
+    });
+  }
+
+  Future<List<MTO>> getMTOGrouped({
+    required MTOField column,
+    int? limit = 10,
+    int? offset = 0,
+    OrderBy? orderBy,
+  }) async {
+    final db = await DatabaseHelper.to.database;
+
+    String? orderBy_;
+    if (orderBy != null) {
+      orderBy_ = '${orderBy.column} ${orderBy.ascending ? 'ASC' : 'DESC'}';
+    }
+
+    // final queryResult = await db.query(
+    //   DataBaseTables.mtoGrouped.value,
+    //   orderBy: orderBy_,
+    //   limit: limit,
+    //   offset: offset,
+    // );
+
+    final res = await db.rawQuery('''
+      SELECT ${column.value}, SUM(database_id) AS ${MTOField.sheet.value}, COUNT(*) AS ${MTOField.lineNumber.value}
+      FROM ${DataBaseTables.mto.value}
+      GROUP BY ${column.value}
+      LIMIT $limit OFFSET $offset
+    ''');
+
+    logger.wtf(res);
+
+    return res.map((row) => MTO.fromJson(row)).toList();
   }
 }

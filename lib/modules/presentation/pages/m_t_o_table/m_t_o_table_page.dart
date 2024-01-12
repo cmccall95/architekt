@@ -1,3 +1,5 @@
+import 'package:arkitekt/modules/application/generate_m_t_o_grouped_controller.dart';
+import 'package:arkitekt/modules/application/get_m_t_os_grouped_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +17,7 @@ part 'widgets/_json_processing.dart';
 part 'widgets/_m_t_o_tab.dart';
 part 'widgets/_m_t_o_grouped_tab.dart';
 part 'widgets/_table_tabs.dart';
+part 'widgets/_m_t_o_group_processing.dart';
 
 class MTOTablePage extends StatefulWidget {
   const MTOTablePage({super.key});
