@@ -17,7 +17,13 @@ sealed class AsyncValue<T> {
 }
 
 class AsyncLoading<T> extends AsyncValue<T> {
-  const AsyncLoading();
+  const AsyncLoading({
+    this.message,
+    this.progress,
+  });
+
+  final String? message;
+  final double? progress;
 }
 
 class AsyncError<T> extends AsyncValue<T> {

@@ -1,11 +1,10 @@
-import 'package:arkitekt/core/config/logger_custom.dart';
-import 'package:arkitekt/modules/presentation/pages/blueprint/widgets/blueprint_columns.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdfx/pdfx.dart';
 
 import '../../../../application/blueprint_pdf_controller.dart';
 import 'blueprint_canvas.dart';
+import 'blueprint_columns.dart';
 
 class BlueprintPdf extends StatelessWidget {
   const BlueprintPdf({super.key});

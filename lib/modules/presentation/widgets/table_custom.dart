@@ -1,15 +1,14 @@
 import 'dart:math';
 
-import 'package:arkitekt/core/config/logger_custom.dart';
-import 'package:arkitekt/modules/domain/m_t_o.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/types.dart';
+import '../../domain/m_t_o.dart';
 import '../../domain/m_t_o_fields.dart';
 
 part 'table_custom_body.dart';
-part 'table_custom_header.dart';
 part 'table_custom_cell.dart';
+part 'table_custom_header.dart';
 
 typedef TableBuilder = Widget Function(ScrollController horizontalController);
 

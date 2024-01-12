@@ -4,6 +4,7 @@ import 'package:pdfx/pdfx.dart';
 import '../../core/config/logger_custom.dart';
 import '../../core/services/ocr_service.dart';
 import '../../core/utils/async_value.dart';
+import '../domain/highlight_rect.dart';
 
 class ApplyOcrController {
   final stateValue = AsyncValue<ApplyOCRResult?>.data(null).obs;
@@ -13,6 +14,7 @@ class ApplyOcrController {
   Future<void> applyOcr({
     required PdfDocument document,
     required int page,
+    required List<HighlightRect> rects,
   }) async {
     stateValue.value = const AsyncLoading();
 
@@ -20,6 +22,7 @@ class ApplyOcrController {
       final result = await OcrService().applyOcr(
         document: document,
         page: page,
+        rects: rects,
       );
       stateValue.value = AsyncData(result);
     } catch (e, stack) {

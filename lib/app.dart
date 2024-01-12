@@ -4,8 +4,6 @@ import 'package:arkitekt/core/config/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'src/components/pre_load_page.dart';
-
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
@@ -14,7 +12,7 @@ class App extends StatelessWidget {
     return GetMaterialApp(
       theme: theme,
       debugShowCheckedModeBanner: false,
-      home: const PreLoadPage(),
+      initialRoute: Routes.loadScripts,
       getPages: Routes.pages,
       initialBinding: _InitialBindings(),
     );

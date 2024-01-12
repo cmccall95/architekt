@@ -1,9 +1,8 @@
+import 'package:arkitekt/core/config/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../src/components/blueprint_ocr_viewer.dart';
 import '../../../application/apply_ocr_controller.dart';
-import '../../../application/blueprint_pdf_controller.dart';
 import '../../widgets/async_helper.dart';
 import 'widgets/blueprint_footer.dart';
 import 'widgets/blueprint_pdf.dart';
@@ -25,22 +24,22 @@ class _BlueprintPageState extends State<BlueprintPage> {
     super.initState();
 
     _everApplyOcr = ever(Get.find<ApplyOcrController>().stateValue, (value) {
-      if (value.hasData && value.dataOrNull != null) {
-        final controller = Get.find<BlueprintPdfController>();
-        final (image, output) = value.dataOrNull!;
-        final document = controller.document.value;
+      // if (value.hasData && value.dataOrNull != null) {
+      //   final controller = Get.find<BlueprintPdfController>();
+      //   final (image, output) = value.dataOrNull!;
+      //   final document = controller.document.value;
 
-        Navigator.of(context)
-          ..pop()
-          ..push(MaterialPageRoute(
-            builder: (context) => BlueprintOcrViewer(
-              page: controller.page.value,
-              data: output,
-              image: image,
-              pdfName: document!.sourceName.split('\\').last,
-            ),
-          ));
-      }
+      //   Navigator.of(context)
+      //     ..pop()
+      //     ..push(MaterialPageRoute(
+      //       builder: (context) => BlueprintOcrViewer(
+      //         page: controller.page.value,
+      //         data: output,
+      //         image: image,
+      //         pdfName: document!.sourceName.split('\\').last,
+      //       ),
+      //     ));
+      // }
     });
   }
 
@@ -62,6 +61,9 @@ class _BlueprintPageState extends State<BlueprintPage> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => Navigator.of(context).pushNamed(Routes.mtoTable),
+          ),
           appBar: AppBar(
             centerTitle: true,
             title: const Text('Blueprints Reader'),

@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:arkitekt/core/config/logger_custom.dart';
 import 'package:pdfx/pdfx.dart';
+
+import '../../modules/domain/highlight_rect.dart';
 
 typedef ApplyOCRResult = (Uint8List image, dynamic output);
 
 class OcrService {
   static final tempDir = Directory.systemTemp.path;
-  static final mainDir = '$tempDir\\arkitekt_ocr';
-  static final scriptDir = '$mainDir\\arkitekt_ocr-master';
+  static final mainDir = '$tempDir\\architekt_ocr';
+  static final scriptDir = '$mainDir\\architekt_ocr-master';
   static final ocrPy = '$scriptDir\\main.py';
   static final pdfUtilPy = '$scriptDir\\pdf_utils.py';
 
@@ -48,27 +51,55 @@ class OcrService {
     }
   }
 
+  Future<void> _createInput({
+    required String tempDirectory,
+    required List<HighlightRect> rects,
+  }) async {
+    try {
+      final jsonFile = File('$tempDirectory\\input.json');
+      final jsonData = rects.map((rect) => rect.toJson()).toList();
+      logger.wtf(jsonData);
+
+      await jsonFile.writeAsString(json.encode(jsonData));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<ApplyOCRResult> applyOcr({
     required PdfDocument document,
     required int page,
+    required List<HighlightRect> rects,
   }) async {
     final directory = '$tempDir\\${DateTime.now().microsecondsSinceEpoch}';
-    await _extractPdf(
-      tempDirectory: directory,
-      document: document,
-      page: page,
-    );
+    Directory(directory).createSync(recursive: true);
 
-    await _applyOcr(
-      tempDirectory: directory,
-      page: page,
-    );
+    logger.wtf(directory);
+    try {
+      await _createInput(
+        tempDirectory: directory,
+        rects: rects,
+      );
 
-    final image = await File('$directory\\${page}_1.png').readAsBytes();
-    final output = await File('$directory\\output.json').readAsString();
+      await _extractPdf(
+        tempDirectory: directory,
+        document: document,
+        page: page,
+      );
 
-    await Directory(directory).delete(recursive: true);
+      await _applyOcr(
+        tempDirectory: directory,
+        page: page,
+      );
 
-    return (image, jsonDecode(output));
+      final image = await File('$directory\\${page}_1.png').readAsBytes();
+      final output = await File('$directory\\output.json').readAsString();
+
+      return (image, jsonDecode(output));
+    } catch (e) {
+      rethrow;
+    } finally {
+      // await Directory(directory).delete(recursive: true);
+    }
   }
 }
