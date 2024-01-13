@@ -99,7 +99,7 @@ class OcrService {
     } catch (e) {
       rethrow;
     } finally {
-      // await Directory(directory).delete(recursive: true);
+      await Directory(directory).delete(recursive: true);
     }
   }
 }
