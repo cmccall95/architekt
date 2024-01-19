@@ -57,6 +57,8 @@ class MtoFieldSelector extends HookConsumerWidget {
     required LayerLink layerLink,
     required OverlayEntry? entry,
     required ValueChanged<OverlayEntry?> onEntryChanged,
+    required VoidCallback onGainFocus,
+    required VoidCallback onLoseFocus,
   }) {
     if (focusNode.hasFocus) {
       final entry_ = _createOverlay(
@@ -66,19 +68,20 @@ class MtoFieldSelector extends HookConsumerWidget {
 
       Overlay.of(context).insert(entry_);
       onEntryChanged(entry_);
+      onGainFocus();
     } else {
       entry?.remove();
       onEntryChanged(null);
+      onLoseFocus();
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timestamp = useState(DateTime.now().millisecondsSinceEpoch);
     final focusNode = useFocusNode();
     final layerLink = useMemoized(() => LayerLink());
     final entry = useState<OverlayEntry?>(null);
-
-    ref.listen(_fieldNameProvider, (_, __) {});
 
     useEffect(() {
       void listener() => _onFocusUpdate(
@@ -87,6 +90,10 @@ class MtoFieldSelector extends HookConsumerWidget {
             layerLink: layerLink,
             entry: entry.value,
             onEntryChanged: (value) => entry.value = value,
+            onGainFocus: () {},
+            onLoseFocus: () {
+              timestamp.value = DateTime.now().millisecondsSinceEpoch;
+            },
           );
 
       focusNode.addListener(listener);
@@ -96,7 +103,7 @@ class MtoFieldSelector extends HookConsumerWidget {
     return CompositedTransformTarget(
       link: layerLink,
       child: TextFormField(
-        key: ValueKey('textfield_${field?.name}_${focusNode.hasFocus}'),
+        key: ValueKey('textfield_${field}_${timestamp.value}'),
         focusNode: focusNode,
         initialValue: field?.name,
         validator: validator,
@@ -127,7 +134,7 @@ class _OptionsDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final query = ref.watch(_fieldNameProvider);
 
-    final columns = MTOField.sortSingleFields.where((element) {
+    final columns = MTOField.valuesSorted.where((element) {
       final name = element.name.toLowerCase();
       return name.contains(query?.toLowerCase() ?? '');
     }).toList();
@@ -150,6 +157,9 @@ class _OptionsDropdown extends ConsumerWidget {
               return ListTile(
                 title: Text(field.name),
                 onTap: () {
+                  final notifier = ref.read(_fieldNameProvider.notifier);
+                  notifier.state = '';
+
                   onValueChanged(field);
                   FocusScope.of(context).unfocus();
                 },

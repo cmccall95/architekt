@@ -1,54 +1,39 @@
-enum MTOFieldType {
-  /// represents a region with a single column
-  column,
-
-  /// represents a region with multiple columns
-  table,
-}
-
 enum MTOField {
-  id('id', MTOFieldType.column),
-  drawing('drawing', MTOFieldType.column),
-  sheet('sheet', MTOFieldType.column),
-  lineNumber('line_number', MTOFieldType.column),
-  pipeSpec('pipe_spec', MTOFieldType.column),
-  paintSpec('paint_spec', MTOFieldType.column),
-  insulationSpec('insulation_spec', MTOFieldType.column),
-  pwht('pwht', MTOFieldType.column),
-  pAndId('p_and_id', MTOFieldType.column),
-  area('area', MTOFieldType.column),
-  item('item', MTOFieldType.column),
-  tag('tag', MTOFieldType.column),
-  quantity('quantity', MTOFieldType.column),
-  nps('nps', MTOFieldType.column),
-  materialDescription('material_description', MTOFieldType.column),
-  heatTrace('heat_trace', MTOFieldType.column),
-  insulationType('insulation_type', MTOFieldType.column),
-  insulationThickness('insulation_thickness', MTOFieldType.column),
-  processLineList('process_line_list', MTOFieldType.column),
-  pos('pos', MTOFieldType.column),
-  ident('ident', MTOFieldType.column),
-  npd('npd', MTOFieldType.column),
-  documents('documents', MTOFieldType.column),
-  ptnd('ptnd', MTOFieldType.column),
-  size('size', MTOFieldType.column),
-  bom('bom', MTOFieldType.table);
+  id('id'),
+  drawing('drawing'),
+  sheet('sheet'),
+  lineNumber('line_number'),
+  pipeSpec('pipe_spec'),
+  paintSpec('paint_spec'),
+  insulationSpec('insulation_spec'),
+  pwht('pwht'),
+  pAndId('p_and_id'),
+  area('area'),
+  item('item'),
+  tag('tag'),
+  quantity('quantity'),
+  nps('nps'),
+  materialDescription('material_description'),
+  heatTrace('heat_trace'),
+  insulationType('insulation_type'),
+  insulationThickness('insulation_thickness'),
+  processLineList('process_line_list'),
+  pos('pos'),
+  ident('ident'),
+  npd('npd'),
+  documents('documents'),
+  ptnd('ptnd'),
+  size('size'),
+  bom('bom');
 
-  const MTOField(this.value, this.type);
+  const MTOField(this.value);
 
   final String value;
-  final MTOFieldType type;
 
-  static List<MTOField> get sortSingleFields {
-    final values = MTOField.values.where((e) => e.isColumn).toList();
-    values.sort((a, b) => a.name.compareTo(b.name));
-    return values;
-  }
-
-  static List<MTOField> get sortMultiFields {
-    final values = MTOField.values.where((e) => e.isTable).toList();
-    values.sort((a, b) => a.name.compareTo(b.name));
-    return values;
+  static List<MTOField> get valuesSorted {
+    final values_ = values.toList();
+    values_.sort((a, b) => a.name.compareTo(b.name));
+    return values_;
   }
 
   String get name {
@@ -81,14 +66,4 @@ enum MTOField {
       MTOField.bom => 'BOM',
     };
   }
-
-  bool get isColumn => switch (type) {
-        MTOFieldType.column => true,
-        _ => false,
-      };
-
-  bool get isTable => switch (type) {
-        MTOFieldType.table => true,
-        _ => false,
-      };
 }
