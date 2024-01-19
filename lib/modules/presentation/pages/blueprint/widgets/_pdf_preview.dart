@@ -1,19 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pdfx/pdfx.dart';
+part of '../blueprint_page.dart';
 
-import '../../../../application/blueprint_pdf_controller.dart';
-import 'blueprint_canvas.dart';
-import 'blueprint_columns.dart';
-
-class BlueprintPdf extends StatelessWidget {
-  const BlueprintPdf({super.key});
+class _PdfPreview extends StatelessWidget {
+  const _PdfPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Row(
       children: [
-        BlueprintColumns(),
+        _RegionsList(),
         VerticalDivider(width: 0),
         Expanded(
           child: Padding(
@@ -86,9 +80,9 @@ class _Blueprint extends StatelessWidget {
                               controller.page.value = newPage,
                         ),
                       ),
-                      BlueprintCanvas(
-                        width: canvasWidth,
-                        height: canvasHeight,
+                      _Canvas(
+                        canvasWidth: canvasWidth,
+                        canvasHeight: canvasHeight,
                       ),
                     ],
                   );

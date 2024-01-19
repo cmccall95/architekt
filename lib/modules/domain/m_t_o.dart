@@ -120,6 +120,7 @@ class MTO {
       MTOField.npd => npd,
       MTOField.ptnd => ptnd,
       MTOField.size => size,
+      MTOField.bom => null,
     };
 
     return value;

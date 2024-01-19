@@ -1,16 +1,34 @@
-import 'package:arkitekt/modules/application/blueprint_controller.dart';
+import 'package:arkitekt/modules/application/region_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../../core/config/logger_custom.dart';
 import '../../../../application/apply_ocr_controller.dart';
 import '../../../../application/blueprint_pdf_controller.dart';
 
-class BlueprintFooter extends StatelessWidget {
+class BlueprintFooter extends ConsumerWidget {
   const BlueprintFooter({super.key});
 
+  void _applyOcr({
+    required WidgetRef ref,
+  }) {
+    final regions = ref.read(regionListControllerProvider);
+    logger.wtf(regions.map((element) => element.toJson()).toList());
+
+    final controller = Get.find<BlueprintPdfController>();
+    final document = controller.document.value;
+    if (document == null) return;
+
+    Get.find<ApplyOcrController>().applyOcr(
+      document: document,
+      page: controller.page.value,
+      regions: regions,
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 56,
       decoration: BoxDecoration(
@@ -21,24 +39,7 @@ class BlueprintFooter extends StatelessWidget {
         const _DocumentPageCounter(),
         const Spacer(),
         ElevatedButton.icon(
-          onPressed: () {
-            // final controller = Get.find<BlueprintController>();
-            // logger.wtf(
-            //   controller.highlightRects
-            //       .map((element) => element.toJson())
-            //       .toList(),
-            // );
-
-            final controller = Get.find<BlueprintPdfController>();
-            final document = controller.document.value;
-            if (document == null) return;
-
-            Get.find<ApplyOcrController>().applyOcr(
-              document: document,
-              page: controller.page.value,
-              rects: Get.find<BlueprintController>().highlightRects,
-            );
-          },
+          onPressed: () => _applyOcr(ref: ref),
           label: const Text('Apply OCR'),
           icon: const Icon(Icons.auto_fix_high_rounded),
         )

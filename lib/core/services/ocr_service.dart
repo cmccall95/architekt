@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:arkitekt/core/config/logger_custom.dart';
 import 'package:pdfx/pdfx.dart';
 
-import '../../modules/domain/highlight_rect.dart';
+import '../../modules/domain/region.dart';
+import '../config/logger_custom.dart';
 
 typedef ApplyOCRResult = (Uint8List image, dynamic output);
 
@@ -53,11 +53,11 @@ class OcrService {
 
   Future<void> _createInput({
     required String tempDirectory,
-    required List<HighlightRect> rects,
+    required List<Region> regions,
   }) async {
     try {
       final jsonFile = File('$tempDirectory\\input.json');
-      final jsonData = rects.map((rect) => rect.toJson()).toList();
+      final jsonData = regions.map((rect) => rect.toJson()).toList();
       logger.wtf(jsonData);
 
       await jsonFile.writeAsString(json.encode(jsonData));
@@ -69,7 +69,7 @@ class OcrService {
   Future<ApplyOCRResult> applyOcr({
     required PdfDocument document,
     required int page,
-    required List<HighlightRect> rects,
+    required List<Region> fields,
   }) async {
     final directory = '$tempDir\\${DateTime.now().microsecondsSinceEpoch}';
     Directory(directory).createSync(recursive: true);
@@ -78,7 +78,7 @@ class OcrService {
     try {
       await _createInput(
         tempDirectory: directory,
-        rects: rects,
+        regions: fields,
       );
 
       await _extractPdf(
