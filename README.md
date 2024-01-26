@@ -3,15 +3,31 @@
 
 These instructions will guide you through setting up your project on a Windows environment. Make sure to follow each step carefully to ensure a successful setup.
 
-## Installing Flutter and Visual Studio 2019
+## Requirements
 
-1. Install Flutter by following the official installation guide: [Flutter Installation Guide](https://flutter.dev/docs/get-started/install)
-2. Install Visual Studio 2019: [Visual Studio Download](https://visualstudio.microsoft.com/downloads/)
+- Docker: Make sure you have Docker installed on your machine. You can download it from [here](https://www.docker.com/products/docker-desktop).
+- Flutter: This project requires Flutter version 3.13.6 or higher. You can download it from [here](https://flutter.dev/docs/get-started/install).
 
+## Setup Flutter
 
-## Installing Flutter Version Management (FVM)
+### Installing Flutter
+
+If you already have Flutter installed, you can skip this step. if it is below version 3.13.6, refer to the [FVM](#installing-flutter-version-management-fvm) section below to install the correct version.
+
+Install Flutter by following the official installation guide: [Flutter Installation Guide](https://flutter.dev/docs/get-started/install)
+
+### Installing Visual Studio 2019
+if you already Flutter setup for windows, you can skip this step.
+
+Install [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) to enable Windows development with Flutter.
+
+### Install FVM (Optional)
 
 [FVM](https://pub.dev/packages/fvm) (Flutter Version Management) is a tool that allows you to manage multiple Flutter SDK versions. You can use it to ensure your project uses the correct Flutter version.
+
+If you already have Flutter with the correct version installed, you can skip this step.
+
+#### Installing Flutter Version Management (FVM)
 
 1. Install FVM using Dart's package manager `pub` by running the following command:
 
@@ -21,95 +37,90 @@ These instructions will guide you through setting up your project on a Windows e
 
 2. Ensure that Dart's executable directory is in your system's PATH. This directory is typically located at `C:\Users\YourUsername\AppData\Roaming\Pub\Cache\bin`. Replace `YourUsername` with your actual username.
 
-<br>
-
-## Using FVM
+#### Using FVM
 
 With FVM installed, you can use it to manage Flutter versions for your project.
 
-### Installing a Specific Flutter Version
+##### Installing a Specific Flutter Version
 
 1. Navigate to your project directory in the command prompt.
 
-2. Install a specific Flutter version using FVM by running the following command (replace `2.10.3` with the desired version):
-
+2. Install a specific Flutter version using FVM by running the following command
    ```shell
    fvm install 3.13.6
    ```
 
-### Setting the Project's Flutter Version
+##### Setting the Project's Flutter Version
 
-1. Set the Flutter version for your project by running the following command (replace `2.10.3` with the desired version):
+1. Set the Flutter version for your project by running the following command
 
    ```shell
    fvm use 3.13.6
    ```
 
-### Running the Project with FVM
+## Setup Docker
 
-Now that you've set the Flutter version for your project using FVM, you can run your project as usual:
+1. Download [Docker Desktop](https://www.docker.com/products/docker-desktop) and install it on your machine.
 
-```shell
-fvm flutter run -d windows
-```
-<br>
+2. Pull the Docker image for this project by running the following command:
 
-## Python and Dependencies
+   ```shell
+   docker pull architektis/aismarkupextractor:latest
+   ```
 
-We need to set up Python and several Python dependencies to support our project.
+3. Run the Docker image by running the following command:
 
-### Install Python
+   on Unix-based systems (like Linux and MacOS):
+   ```shell
+   docker run -d -p 5000:5000 -v "$TMPDIR/AIS_MarkupExtractor/input:/app/downloads" -v "$TMPDIR/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektis/aismarkupextractor:latest
+   ```
 
-1. Download Python from the official website: [Python Downloads](https://www.python.org/downloads/)
-2. Run the installer and make sure to check the box that says "Add Python X.Y to PATH" during installation, replacing "X.Y" with the installed Python version.
+   on Windows:
+   ```shell
+   docker run -d -p 5000:5000 -v "%TEMP%/AIS_MarkupExtractor/input:/app/downloads" -v "%TEMP%/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektis/aismarkupextractor:latest
+   ```
 
-### Install Tesseract
+4. Verify that the Docker image is running by navigating to `http://localhost:5000` in your browser and check for the following message:
 
-1. Download and install Tesseract from the official website: [Tesseract OCR Download](https://github.com/tesseract-ocr/tesseract)
-2. Add the Tesseract installation directory to your system PATH.
+   ```json
+   {
+      "message": "Server is up and running",
+      "server_url": "http://localhost:5000/"
+   }
+   ```
 
-### Install Python Dependencies
+## Setup the Project
+1. create a env.json file in the root of the project and add the following content to it:
+   ```json
+   {
+      "BASE_URL": "http://localhost:5000",
+      "INPUT_PATH_DOCKER": "/app/downloads",
+      "OUTPUT_PATH_DOCKER": "/app/AIS_MarkupExtractor"
+   }
+   ```
 
-Open a command prompt and run the following commands to install the required Python packages:
+**note** this values should come from the docker setup at [Setup Docker](#setup-docker)
 
-#### OpenCV
+## Running the Project
 
-```shell
-pip install opencv-python
-```
+1. Download the project's dependencies:
 
-#### pytesseract
+   ```shell
+   flutter pub get
+   ```
 
-```shell
-pip install pytesseract
-```
+2. Build generated files:
 
-#### Pillow
+   ```shell
+   dart pub run build_runner build
+   ```
 
-```shell
-pip install Pillow
-```
+3. Run the project:
 
-#### Fitz (PyMuPDF)
+   ```shell
+   flutter run -d windows --dart-define-from-file=env.json
+   ```
 
-```shell
-pip install fitz
-```
+**note:** If you are using FVM, just replace `flutter` with `fvm flutter` in the commands above.
 
-#### tools (Additional Package)
 
-```shell
-pip install tools
-```
-
-#### frontend (Additional Package)
-
-```shell
-pip install frontend
-```
-
-#### PyMuPDF
-
-```shell
-pip3 install PyMuPDF
-```

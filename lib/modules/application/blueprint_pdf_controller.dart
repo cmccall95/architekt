@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,11 +7,11 @@ import 'package:pdfx/pdfx.dart';
 
 class BlueprintPdfController {
   final pdfController = Rxn<PdfController>();
-  final document = Rxn<PdfDocument>();
+  final document = Rxn<File>();
   final page = 1.obs;
 
   bool get isFirstPage => page.value == 1;
-  bool get isLastPage => page.value == document.value?.pagesCount;
+  bool get isLastPage => page.value == pdfController.value?.pagesCount;
 
   Future<void> previousPage() async {
     if (isFirstPage) return;
@@ -35,17 +37,17 @@ class BlueprintPdfController {
       allowedExtensions: const ['pdf'],
     );
 
-    if (pdf == null) return;
+    if (pdf == null) {
+      return;
+    }
 
-    document.value = await PdfDocument.openFile(pdf.paths.first!);
+    document.value = File(pdf.paths.first!);
     if (pdfController.value != null) {
-      await pdfController.value!.loadDocument(
-        Future.value(document.value),
-      );
+      final document = PdfDocument.openFile(pdf.paths.first!);
+      await pdfController.value!.loadDocument(document);
     } else {
-      pdfController.value = PdfController(
-        document: Future.value(document.value),
-      );
+      final document = PdfDocument.openFile(pdf.paths.first!);
+      pdfController.value = PdfController(document: document);
     }
 
     page.value = 1;

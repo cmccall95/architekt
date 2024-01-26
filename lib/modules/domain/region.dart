@@ -258,7 +258,7 @@ class Region extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      'field': field?.value,
+      'columnName': field?.value,
       'relativeX0': relativeX0,
       'relativeY0': relativeY0,
       'relativeX1': relativeX1,

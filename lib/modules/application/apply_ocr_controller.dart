@@ -1,35 +1,136 @@
-import 'package:get/get.dart';
-import 'package:pdfx/pdfx.dart';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../core/config/env.dart';
 import '../../core/config/logger_custom.dart';
-import '../../core/services/ocr_service.dart';
-import '../../core/utils/async_value.dart';
+import '../../core/utils/extensions/file.dart';
+import '../data/ocr_repository.dart';
 import '../domain/region.dart';
 
-class ApplyOcrController {
-  final stateValue = AsyncValue<ApplyOCRResult?>.data(null).obs;
-  ApplyOCRResult? get value => stateValue.value.dataOrNull;
-  AsyncValue<ApplyOCRResult?> get state => stateValue.value;
+part 'apply_ocr_controller.g.dart';
+
+@riverpod
+class ApplyOcrController extends _$ApplyOcrController {
+  @override
+  AsyncValue<void> build() {
+    return const AsyncData(null);
+  }
 
   Future<void> applyOcr({
-    required PdfDocument document,
-    required int page,
+    required File document,
     required List<Region> regions,
   }) async {
-    stateValue.value = const AsyncLoading();
+    state = const AsyncLoading();
 
     try {
-      final result = await OcrService().applyOcr(
-        document: document,
-        page: page,
-        fields: regions,
+      final pdfPath = await _generatePdfFile(document);
+      final coordinatesPath = await _generateCoordinatesFile(regions);
+      final payloadOptionsPath = await _generatePayloadOptionsFile();
+
+      final repository = ref.read(ocrRepositoryProvider);
+      final result = await repository.applyOcr(
+        pdfPath: pdfPath,
+        coordinatesPath: coordinatesPath,
+        payloadOptionsPath: payloadOptionsPath,
       );
 
-      stateValue.value = AsyncData(result);
+      state = result.fold(
+        left: (l) => AsyncError(l, StackTrace.current),
+        right: (r) => const AsyncData(null),
+      );
     } catch (e, stack) {
-      String message = e.toString();
-      stateValue.value = AsyncError(e.toString());
-      logger.e(message, error: e, stackTrace: stack);
+      state = AsyncError(e.toString(), stack);
+      logger.e('Failed to apply ocr: $e', error: e, stackTrace: stack);
+    }
+  }
+
+  Future<String> _generatePdfFile(File pdf) async {
+    try {
+      final separator = Platform.pathSeparator;
+      final tempDir = Directory.systemTemp.path;
+      final newPath = '$tempDir'
+          '${separator}AIS_MarkupExtractor'
+          '${separator}input'
+          '$separator${pdf.name}';
+
+      await pdf.copy(newPath);
+
+      return '${Env.inputPathDocker}/${pdf.name}';
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> _generateCoordinatesFile(List<Region> regions) async {
+    try {
+      final separator = Platform.pathSeparator;
+      final tempDir = Directory.systemTemp.path;
+      final path = '$tempDir'
+          '${separator}AIS_MarkupExtractor'
+          '${separator}input'
+          '${separator}coordinates.json';
+
+      final jsonFile = File(path);
+
+      final jsonData = regions.map((e) => e.toJson()).toList();
+      const jsonEncoder = JsonEncoder.withIndent('  ');
+      await jsonFile.writeAsString(jsonEncoder.convert(jsonData));
+
+      return '${Env.inputPathDocker}/${jsonFile.name}';
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> _generatePayloadOptionsFile() async {
+    try {
+      final separator = Platform.pathSeparator;
+      final tempDir = Directory.systemTemp.path;
+      final path = '$tempDir'
+          '${separator}AIS_MarkupExtractor'
+          '${separator}input'
+          '${separator}payload_options.json';
+
+      final jsonData = {
+        "aggregate_cols_general": [
+          "elevation",
+          "name",
+          "title",
+        ],
+        "keep_cols_general": [
+          "sys_build",
+          "sys_path",
+          "sys_filename",
+          "pdf_page",
+          "source_filename",
+          "modDate",
+          "id",
+          "image_xref",
+          "image_path",
+          "coordinates2"
+        ],
+        "merge_to_bom": [
+          "line_number",
+          "drawing",
+          "sheet",
+          "area",
+          "rev",
+          "p_and_id"
+        ],
+        "bom_merge_on": [
+          "sys_path",
+          "pdf_page",
+        ]
+      };
+
+      final jsonFile = File(path);
+      const jsonEncoder = JsonEncoder.withIndent('  ');
+      await jsonFile.writeAsString(jsonEncoder.convert(jsonData));
+      return '${Env.inputPathDocker}/${jsonFile.name}';
+    } catch (e) {
+      rethrow;
     }
   }
 }

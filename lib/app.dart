@@ -12,7 +12,7 @@ class App extends StatelessWidget {
     return GetMaterialApp(
       theme: theme,
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.loadScripts,
+      initialRoute: Routes.blueprint,
       getPages: Routes.pages,
       initialBinding: _InitialBindings(),
     );

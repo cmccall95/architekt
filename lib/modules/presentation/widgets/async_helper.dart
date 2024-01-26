@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../core/utils/async_value.dart';
+import '../../../core/utils/async_value.dart' as app;
 
-class AsyncHelper extends StatefulWidget {
+class AsyncHelper extends ConsumerStatefulWidget {
   const AsyncHelper({
     super.key,
     required this.child,
     this.loadingObservers = const [],
     this.errorObservers = const [],
+    this.loadingProviders = const [],
   });
 
   final Widget child;
-  final List<Rx<AsyncValue>> loadingObservers;
-  final List<Rx<AsyncValue>> errorObservers;
+  final List<Rx<app.AsyncValue>> loadingObservers;
+  final List<Rx<app.AsyncValue>> errorObservers;
+
+  final List<ProviderListenable<AsyncValue>> loadingProviders;
 
   @override
-  State<AsyncHelper> createState() => _AsyncHelperState();
+  ConsumerState<AsyncHelper> createState() => _AsyncHelperState();
 }
 
-class _AsyncHelperState extends State<AsyncHelper> {
+class _AsyncHelperState extends ConsumerState<AsyncHelper> {
   late final Worker _everAllError;
 
   @override
@@ -27,7 +31,7 @@ class _AsyncHelperState extends State<AsyncHelper> {
     super.initState();
 
     _everAllError = everAll(widget.errorObservers, (value) {
-      final value_ = value as AsyncValue;
+      final value_ = value as app.AsyncValue;
       if (value_.hasError) {
         showDialog(
           context: context,
@@ -50,32 +54,49 @@ class _AsyncHelperState extends State<AsyncHelper> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.child,
-        if (widget.loadingObservers.isNotEmpty)
-          Obx(() {
-            final isLoading = widget.loadingObservers.any((element) {
-              return element.value.isLoading;
-            });
+    for (final observer in widget.loadingObservers) {
+      if (!observer.value.isLoading) continue;
 
-            if (isLoading) {
-              return Positioned.fill(
-                child: WillPopScope(
-                  onWillPop: () async => false,
-                  child: const ColoredBox(
-                    color: Colors.black54,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
+      return Stack(
+        children: [
+          widget.child,
+          Positioned.fill(
+            child: WillPopScope(
+              onWillPop: () async => false,
+              child: const ColoredBox(
+                color: Colors.black54,
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
-              );
-            }
+              ),
+            ),
+          ),
+        ],
+      );
+    }
 
-            return const SizedBox.shrink();
-          }),
-      ],
-    );
+    for (final provider in widget.loadingProviders) {
+      final value = ref.watch(provider);
+      if (!value.isLoading) continue;
+
+      return Stack(
+        children: [
+          widget.child,
+          Positioned.fill(
+            child: WillPopScope(
+              onWillPop: () async => false,
+              child: const ColoredBox(
+                color: Colors.black54,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return widget.child;
   }
 }
