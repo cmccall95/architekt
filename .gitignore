@@ -10,7 +10,7 @@
 .svn/
 *.g.dart
 env.json
-.fvm/flutter_sdk
+.fvm/flutter_sdk/
 
 # IntelliJ related
 *.iml

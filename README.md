@@ -70,10 +70,12 @@ With FVM installed, you can use it to manage Flutter versions for your project.
 
 3. Run the Docker image by running the following command:
 
-   on Unix-based systems (like Linux and MacOS):
+   on MacOS:
    ```shell
-   docker run -d -p 5000:5000 -v "$TMPDIR/AIS_MarkupExtractor/input:/app/downloads" -v "$TMPDIR/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektis/aismarkupextractor:latest
+   docker run -d -p 5000:5000 -v "/Users/<your-user>/Library/Containers/com.example.architekt/Data/tmp/AIS_MarkupExtractor/input:/app/downloads" -v "/Users/<your-user>/Library/Containers/com.example.architekt/Data/tmp/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektis/aismarkupextractor:latest
    ```
+
+   **note** replace `<your-user>` with your actual username.
 
    on Windows:
    ```shell
@@ -122,5 +124,3 @@ With FVM installed, you can use it to manage Flutter versions for your project.
    ```
 
 **note:** If you are using FVM, just replace `flutter` with `fvm flutter` in the commands above.
-
-
