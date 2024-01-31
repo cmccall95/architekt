@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../application/apply_ocr_controller.dart';
@@ -12,15 +11,14 @@ class BlueprintFooter extends ConsumerWidget {
   void _applyOcr({
     required WidgetRef ref,
   }) {
+    final pdf = ref.watch(blueprintPdfControllerProvider);
+    final properties = pdf.valueOrNull;
+    if (properties == null) return;
+
     final regions = ref.read(regionListControllerProvider);
-
-    final controller = Get.find<BlueprintPdfController>();
-    final document = controller.document.value;
-    if (document == null) return;
-
     final notifier = ref.read(applyOcrControllerProvider.notifier);
     notifier.applyOcr(
-      document: document,
+      document: properties.file,
       regions: regions,
     );
   }
@@ -46,25 +44,24 @@ class BlueprintFooter extends ConsumerWidget {
   }
 }
 
-class _DocumentPageCounter extends StatelessWidget {
+class _DocumentPageCounter extends ConsumerWidget {
   const _DocumentPageCounter();
 
   @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final controller = Get.find<BlueprintPdfController>();
-      final document = controller.document.value;
-      final page = controller.page.value;
-      final pdfController = controller.pdfController.value;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pdf = ref.watch(blueprintPdfControllerProvider);
+    final properties = pdf.valueOrNull;
 
-      return Visibility(
-        visible: document != null,
-        child: Center(
-          child: Text(
-            'page $page of ${pdfController?.pagesCount ?? 0}',
-          ),
+    final page = properties?.currentPage ?? 0;
+    final pagesCount = properties?.pagesCount ?? 0;
+
+    return Visibility(
+      visible: properties != null,
+      child: Center(
+        child: Text(
+          'page $page of $pagesCount',
         ),
-      );
-    });
+      ),
+    );
   }
 }

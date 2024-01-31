@@ -128,7 +128,9 @@ class PickDocumentButton extends ConsumerWidget {
     return Center(
       child: OutlinedButton.icon(
         onPressed: () async {
-          await Get.find<BlueprintPdfController>().pickDocument();
+          final notifier = ref.read(blueprintPdfControllerProvider.notifier);
+          await notifier.pickDocument();
+
           _loadTestRegions(ref);
         },
         label: const Text('Pick File'),
