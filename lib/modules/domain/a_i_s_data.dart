@@ -177,6 +177,9 @@ class AISData extends Equatable {
       AISField.sysBuild => sysBuild,
       AISField.sysFilename => sysFilename,
       AISField.sysPath => sysPath,
+      AISField.bom => null,
+      AISField.fab => null,
+      AISField.spec => null,
     };
   }
 
