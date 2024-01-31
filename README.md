@@ -65,21 +65,21 @@ With FVM installed, you can use it to manage Flutter versions for your project.
 2. Pull the Docker image for this project by running the following command:
 
    ```shell
-   docker pull architektis/aismarkupextractor:latest
+   docker pull architektisdev/architektis:latest
    ```
 
 3. Run the Docker image by running the following command:
 
    on MacOS:
    ```shell
-   docker run -d -p 5000:5000 -v "/Users/<your-user>/Library/Containers/com.example.architekt/Data/tmp/AIS_MarkupExtractor/input:/app/downloads" -v "/Users/<your-user>/Library/Containers/com.example.architekt/Data/tmp/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektis/aismarkupextractor:latest
+   docker run -d -p 5000:5000 -v "/Users/<your-user>/Library/Containers/com.example.architekt/Data/tmp/AIS_MarkupExtractor/input:/app/downloads" -v "/Users/<your-user>/Library/Containers/com.example.architekt/Data/tmp/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektisdev/architektis:latest
    ```
 
    **note** replace `<your-user>` with your actual username.
 
    on Windows:
    ```shell
-   docker run -d -p 5000:5000 -v "%TEMP%/AIS_MarkupExtractor/input:/app/downloads" -v "%TEMP%/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektis/aismarkupextractor:latest
+   docker run -d -p 5000:5000 -v "%TEMP%/AIS_MarkupExtractor/input:/app/downloads" -v "%TEMP%/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektisdev/architektis:latest
    ```
 
 4. Verify that the Docker image is running by navigating to `http://localhost:5000` in your browser and check for the following message:
