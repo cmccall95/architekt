@@ -37,7 +37,7 @@ class ClientHttp {
             'type': 'response',
             'url': response.requestOptions.uri,
             'statusCode': response.statusCode,
-            'data': response.data,
+            // 'data': response.data,
           });
 
           return handler.next(response);

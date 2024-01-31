@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+part of '../blueprint_page.dart';
 
-class ExitAppButton extends StatelessWidget {
-  const ExitAppButton({super.key});
+class _ExitAppButton extends StatelessWidget {
+  const _ExitAppButton({super.key});
 
   void closeApp(BuildContext context) {
     showDialog(
@@ -34,12 +34,12 @@ class ExitAppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: TextButton.icon(
+      child: OutlinedButton.icon(
         onPressed: () => closeApp(context),
         label: const Text('Exit'),
         icon: const Icon(Icons.exit_to_app),
-        style: TextButton.styleFrom(
-          foregroundColor: Colors.white,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: context.theme.appBarTheme.iconTheme?.color,
         ),
       ),
     );

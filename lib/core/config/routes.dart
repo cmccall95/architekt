@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 
 import '../../modules/presentation/pages/blueprint/blueprint_bindings.dart';
 import '../../modules/presentation/pages/blueprint/blueprint_page.dart';
-import '../../modules/presentation/pages/m_t_o_table/m_t_o_table_bindings.dart';
 import '../../modules/presentation/pages/m_t_o_table/m_t_o_table_page.dart';
 
 abstract class Routes {
@@ -19,7 +18,6 @@ abstract class Routes {
     GetPage(
       name: mtoTable,
       page: () => const MTOTablePage(),
-      binding: MTOTableBindings(),
     ),
   ];
 }

@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:arkitekt/core/config/logger_custom.dart';
-import 'package:arkitekt/modules/domain/region.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../domain/region.dart';
 
 part 'create_region_controller.g.dart';
 

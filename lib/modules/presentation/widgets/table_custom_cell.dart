@@ -1,18 +1,15 @@
 part of 'table_custom.dart';
 
-typedef SelectedCell = ({
-  MTO row,
-  MTOField column,
-});
-
 enum TableCustomCellType {
   custom,
   dropdown,
+  text,
   textField;
 
   bool get isDropdown => this == TableCustomCellType.dropdown;
   bool get isTextField => this == TableCustomCellType.textField;
   bool get isCustom => this == TableCustomCellType.custom;
+  bool get isText => this == TableCustomCellType.text;
 }
 
 class TableCustomCell extends StatelessWidget {
@@ -45,6 +42,16 @@ class TableCustomCell extends StatelessWidget {
   })  : child = null,
         options = null,
         type = TableCustomCellType.textField;
+
+  const TableCustomCell.text({
+    super.key,
+    this.value,
+    this.onTap,
+    this.isSelected = false,
+  })  : child = null,
+        options = null,
+        onChanged = null,
+        type = TableCustomCellType.text;
 
   final Widget? child;
   final bool isSelected;
@@ -101,6 +108,17 @@ class TableCustomCell extends StatelessWidget {
           padding: padding,
           border: border,
           isSelected: isSelected,
+        ),
+      );
+    }
+
+    if (type.isText) {
+      return GestureDetector(
+        onTap: onTap,
+        child: _TableCustomTextCell(
+          padding: padding,
+          border: border,
+          value: value,
         ),
       );
     }
@@ -245,6 +263,38 @@ class _TableCustomTextFieldCell extends StatelessWidget {
         border: border,
       ),
       child: child,
+    );
+  }
+}
+
+class _TableCustomTextCell extends StatelessWidget {
+  const _TableCustomTextCell({
+    required this.value,
+    required this.padding,
+    required this.border,
+  });
+
+  final String? value;
+  final Border border;
+  final EdgeInsets padding;
+
+  @override
+  Widget build(BuildContext context) {
+    final specs = TableCustom.of(context);
+
+    return Container(
+      width: specs.minColumnWidth,
+      alignment: specs.cellAlignment,
+      decoration: BoxDecoration(
+        border: border,
+      ),
+      child: Padding(
+        padding: padding,
+        child: Text(
+          value ?? '',
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
     );
   }
 }

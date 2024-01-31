@@ -5,12 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/m_t_o_fields.dart';
+import '../../domain/a_i_s_field.dart';
 
-part 'mto_field_selector.g.dart';
+part 'field_selector.g.dart';
 
-class MtoFieldSelector extends HookConsumerWidget {
-  const MtoFieldSelector({
+class FieldSelector extends HookConsumerWidget {
+  const FieldSelector({
     super.key,
     this.field,
     required this.onFieldChanged,
@@ -18,8 +18,8 @@ class MtoFieldSelector extends HookConsumerWidget {
     this.validator,
   });
 
-  final MTOField? field;
-  final ValueChanged<MTOField> onFieldChanged;
+  final AISField? field;
+  final ValueChanged<AISField> onFieldChanged;
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
 
@@ -105,7 +105,7 @@ class MtoFieldSelector extends HookConsumerWidget {
       child: TextFormField(
         key: ValueKey('textfield_${field}_${timestamp.value}'),
         focusNode: focusNode,
-        initialValue: field?.name,
+        initialValue: field?.displayName,
         validator: validator,
         onChanged: (value) {
           final notifier = ref.read(_fieldNameProvider.notifier);
@@ -127,14 +127,14 @@ class _OptionsDropdown extends ConsumerWidget {
     required this.onValueChanged,
   });
 
-  final ValueChanged<MTOField> onValueChanged;
+  final ValueChanged<AISField> onValueChanged;
   final double maxHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final query = ref.watch(_fieldNameProvider);
 
-    final columns = MTOField.valuesSorted.where((element) {
+    final columns = AISField.values.where((element) {
       final name = element.name.toLowerCase();
       return name.contains(query?.toLowerCase() ?? '');
     }).toList();
@@ -155,7 +155,7 @@ class _OptionsDropdown extends ConsumerWidget {
               final field = columns[index];
 
               return ListTile(
-                title: Text(field.name),
+                title: Text(field.displayName),
                 onTap: () {
                   final notifier = ref.read(_fieldNameProvider.notifier);
                   notifier.state = '';

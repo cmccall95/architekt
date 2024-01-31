@@ -11,13 +11,13 @@ class TableCustomBody extends StatefulWidget {
     required this.isLastPage,
   });
 
-  final List<MTOField> columns;
-  final List<MTO> rows;
+  final List<AISField> columns;
+  final List<AISTableData> rows;
   final bool isLastPage;
   final ScrollController horizontalScrollController;
 
   final VoidCallback onLoadMore;
-  final Widget Function(MTO mto, MTOField column) cellBuilder;
+  final Widget Function(AISTableData data, AISField column) cellBuilder;
 
   @override
   State<TableCustomBody> createState() => _TableCustomBodyState();
@@ -26,8 +26,10 @@ class TableCustomBody extends StatefulWidget {
 class _TableCustomBodyState extends State<TableCustomBody> {
   final _rowsScrollController = ScrollController();
 
-  List<MTOField> get columns => widget.columns;
-  List<MTO> get rows => widget.rows;
+  Timer? _timer;
+
+  List<AISField> get columns => widget.columns;
+  List<AISTableData> get rows => widget.rows;
 
   double calculateColumnWidth({
     required BoxConstraints constraints,
@@ -49,10 +51,15 @@ class _TableCustomBodyState extends State<TableCustomBody> {
     super.initState();
 
     _rowsScrollController.addListener(() {
-      if (_rowsScrollController.position.extentAfter != 0) {
+      if (_rowsScrollController.position.extentAfter > 0) {
         return;
       }
 
+      if (_timer != null && _timer!.isActive) {
+        return;
+      }
+
+      _timer = Timer(const Duration(seconds: 1), () {});
       widget.onLoadMore.call();
     });
   }
@@ -71,14 +78,14 @@ class _TableCustomBodyState extends State<TableCustomBody> {
     return LayoutBuilder(builder: (context, constraints) {
       final columnWidth = calculateColumnWidth(
         constraints: constraints,
-        minColumnWidth: TableCustom.of(context).minColumnWidth,
+        minColumnWidth: specs.minColumnWidth,
       );
 
       return SingleChildScrollView(
         controller: widget.horizontalScrollController,
         scrollDirection: Axis.horizontal,
         child: SizedBox(
-          width: columnWidth * widget.columns.length,
+          width: columnWidth * widget.columns.length + specs.indexColumnWidth,
           child: ListView.builder(
             controller: _rowsScrollController,
             itemCount: rows.length + indexPlus,
@@ -92,12 +99,22 @@ class _TableCustomBodyState extends State<TableCustomBody> {
               }
 
               final item = widget.rows[index];
-              return SizedBox(
+
+              return Container(
                 height: specs.rowHeight,
+                color: index.isEven ? specs.evenRowColor : specs.oddRowColor,
                 child: Row(
-                  children: columns.map((column) {
-                    return widget.cellBuilder(item, column);
-                  }).toList(),
+                  children: [
+                    SizedBox(
+                      width: specs.indexColumnWidth,
+                      child: TableCustomCell.text(
+                        value: (index + 1).toString(),
+                      ),
+                    ),
+                    ...columns.map((column) {
+                      return widget.cellBuilder(item, column);
+                    }).toList()
+                  ],
                 ),
               );
             },

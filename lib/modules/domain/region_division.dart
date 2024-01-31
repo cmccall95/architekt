@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'm_t_o_fields.dart';
+import 'a_i_s_field.dart';
 import 'region.dart';
 
 class RegionDivision extends Equatable {
@@ -11,7 +11,7 @@ class RegionDivision extends Equatable {
     this.isEdge = false,
   });
 
-  final MTOField? field;
+  final AISField? field;
   final double relativeToRegionX0;
   final double relativeToRegionY0;
 
@@ -37,7 +37,7 @@ class RegionDivision extends Equatable {
   }
 
   RegionDivision copyWith({
-    MTOField? field,
+    AISField? field,
     double? relativeToRegionX0,
     double? relativeToRegionY0,
   }) {

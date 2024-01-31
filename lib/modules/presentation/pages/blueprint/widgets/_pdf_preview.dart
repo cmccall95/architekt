@@ -8,7 +8,6 @@ class _PdfPreview extends StatelessWidget {
     return const Row(
       children: [
         _RegionsList(),
-        VerticalDivider(width: 0),
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(16),

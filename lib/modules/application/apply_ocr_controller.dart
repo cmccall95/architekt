@@ -7,6 +7,7 @@ import '../../core/config/env.dart';
 import '../../core/config/logger_custom.dart';
 import '../../core/utils/extensions/file.dart';
 import '../data/ocr_repository.dart';
+import '../domain/a_i_s_table.dart';
 import '../domain/region.dart';
 
 part 'apply_ocr_controller.g.dart';
@@ -14,7 +15,7 @@ part 'apply_ocr_controller.g.dart';
 @riverpod
 class ApplyOcrController extends _$ApplyOcrController {
   @override
-  AsyncValue<void> build() {
+  AsyncValue<List<AISTable>?> build() {
     return const AsyncData(null);
   }
 
@@ -38,7 +39,7 @@ class ApplyOcrController extends _$ApplyOcrController {
 
       state = result.fold(
         left: (l) => AsyncError(l, StackTrace.current),
-        right: (r) => const AsyncData(null),
+        right: (r) => AsyncData(r),
       );
     } catch (e, stack) {
       state = AsyncError(e.toString(), stack);

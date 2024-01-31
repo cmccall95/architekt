@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/types.dart';
-import '../../domain/m_t_o.dart';
-import '../../domain/m_t_o_fields.dart';
+import '../../domain/a_i_s_field.dart';
+import '../../domain/a_i_s_table_data.dart';
 
 part 'table_custom_body.dart';
 part 'table_custom_cell.dart';
@@ -25,6 +26,9 @@ class TableCustom extends StatefulWidget {
     this.selectedBorderWidth = 2.0,
     this.cellPadding = const EdgeInsets.symmetric(horizontal: 8),
     this.cellAlignment = Alignment.centerLeft,
+    this.evenRowColor = const Color(0xFFf5f5f5),
+    this.oddRowColor = Colors.transparent,
+    this.indexColumnWidth = 100.0,
   }) : super(key: key);
 
   final TableBuilder bodyBuilder;
@@ -32,6 +36,7 @@ class TableCustom extends StatefulWidget {
 
   final double minRowHeight;
   final double minColumnWidth;
+  final double indexColumnWidth;
 
   final Color borderColor;
   final double borderWidth;
@@ -39,6 +44,8 @@ class TableCustom extends StatefulWidget {
   final double selectedBorderWidth;
   final EdgeInsets cellPadding;
   final Alignment cellAlignment;
+  final Color evenRowColor;
+  final Color oddRowColor;
 
   static TableSpecs of(BuildContext context) {
     final specs = context.dependOnInheritedWidgetOfExactType<TableSpecs>();
@@ -62,6 +69,9 @@ class _TableCustomState extends State<TableCustom> {
   Color get selectedBorderColor => widget.selectedBorderColor;
   EdgeInsets get cellPadding => widget.cellPadding;
   Alignment get cellAlignment => widget.cellAlignment;
+  Color get evenRowColor => widget.evenRowColor;
+  Color get oddRowColor => widget.oddRowColor;
+  double get indexColumnWidth => widget.indexColumnWidth;
 
   @override
   void initState() {
@@ -95,6 +105,9 @@ class _TableCustomState extends State<TableCustom> {
       selectedBorderWidth: selectedBorderWidth,
       cellPadding: cellPadding,
       cellAlignment: cellAlignment,
+      evenRowColor: evenRowColor,
+      oddRowColor: oddRowColor,
+      indexColumnWidth: indexColumnWidth,
       child: Column(
         children: [
           widget.headerBuilder(_headerScrollController),
@@ -117,15 +130,21 @@ class TableSpecs extends InheritedWidget {
     required this.selectedBorderWidth,
     required this.cellPadding,
     required this.cellAlignment,
+    required this.evenRowColor,
+    required this.oddRowColor,
+    required this.indexColumnWidth,
   });
 
   final double minRowHeight;
   final double minColumnWidth;
+  final double indexColumnWidth;
 
   final Color borderColor;
   final double borderWidth;
   final Color selectedBorderColor;
   final double selectedBorderWidth;
+  final Color evenRowColor;
+  final Color oddRowColor;
 
   final EdgeInsets cellPadding;
   final Alignment cellAlignment;
@@ -141,6 +160,9 @@ class TableSpecs extends InheritedWidget {
         selectedBorderColor != oldWidget.selectedBorderColor ||
         selectedBorderWidth != oldWidget.selectedBorderWidth ||
         cellPadding != oldWidget.cellPadding ||
-        cellAlignment != oldWidget.cellAlignment;
+        cellAlignment != oldWidget.cellAlignment ||
+        evenRowColor != oldWidget.evenRowColor ||
+        oddRowColor != oldWidget.oddRowColor ||
+        indexColumnWidth != oldWidget.indexColumnWidth;
   }
 }

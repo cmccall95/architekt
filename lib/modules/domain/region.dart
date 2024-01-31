@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
 
-import 'm_t_o_fields.dart';
+import 'a_i_s_field.dart';
 import 'region_division.dart';
 
 class Region extends Equatable {
@@ -19,7 +19,37 @@ class Region extends Equatable {
         relativeX1 = relativeX1.clamp(0, 1),
         relativeY1 = relativeY1.clamp(0, 1);
 
-  final MTOField? field;
+  factory Region.fromJson(Map<String, dynamic> json) {
+    final subregions = json[RegionFieldId.tableColumns.id] as List?;
+    if (subregions == null) {
+      return Region(
+        field: AISField.fromString(json[RegionFieldId.columnName.id]),
+        relativeX0: json[RegionFieldId.relativeX0.id] as double,
+        relativeY0: json[RegionFieldId.relativeY0.id] as double,
+        relativeX1: json[RegionFieldId.relativeX1.id] as double,
+        relativeY1: json[RegionFieldId.relativeY1.id] as double,
+      );
+    }
+
+    final coordinates = json[RegionFieldId.tableCoordinates.id];
+    return Region(
+      field: AISField.fromString(json[RegionFieldId.columnName.id]),
+      relativeX0: coordinates[RegionFieldId.relativeX0.id] as double,
+      relativeY0: coordinates[RegionFieldId.relativeY0.id] as double,
+      relativeX1: coordinates[RegionFieldId.relativeX1.id] as double,
+      relativeY1: coordinates[RegionFieldId.relativeY1.id] as double,
+      subregions: subregions.map((e) {
+        final region = Region.fromJson(e);
+        return RegionDivision(
+          field: region.field,
+          relativeToRegionX0: region.relativeX1,
+          relativeToRegionY0: region.relativeY0,
+        );
+      }).toList(),
+    );
+  }
+
+  final AISField? field;
   final List<RegionDivision> subregions;
 
   final double relativeX0;
@@ -40,28 +70,6 @@ class Region extends Equatable {
 
     subregions_.removeLast();
     return subregions_;
-  }
-
-  Region divisionToRegion({
-    required RegionDivision division,
-    RegionDivision? previousDivision,
-  }) {
-    double relativeX0_ = 0;
-    if (previousDivision != null) {
-      relativeX0_ = previousDivision.relativeToRegionX0 * relativeWidth;
-      relativeX0_ += relativeOriginX;
-    }
-
-    double relativeX1_ = division.relativeToRegionX0 * relativeWidth;
-    relativeX1_ += relativeOriginX;
-
-    return Region(
-      field: division.field,
-      relativeX0: relativeX0_,
-      relativeY0: relativeY0,
-      relativeX1: relativeX1_,
-      relativeY1: relativeY1,
-    );
   }
 
   List<Region> get subregionsAsRegions {
@@ -90,6 +98,136 @@ class Region extends Equatable {
     }
 
     return subregions_;
+  }
+
+  Region copyWith({
+    AISField? field,
+    double? relativeX0,
+    double? relativeY0,
+    double? relativeX1,
+    double? relativeY1,
+    List<RegionDivision>? subregions,
+  }) {
+    return Region(
+      field: field ?? this.field,
+      relativeX0: relativeX0?.clamp(0, 1) ?? this.relativeX0,
+      relativeY0: relativeY0?.clamp(0, 1) ?? this.relativeY0,
+      relativeX1: relativeX1?.clamp(0, 1) ?? this.relativeX1,
+      relativeY1: relativeY1?.clamp(0, 1) ?? this.relativeY1,
+      subregions: subregions ?? this.subregions,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final subregionsAsRegions_ = subregionsAsRegions.map((e) {
+      return e.toJson();
+    }).toList();
+
+    if (subregionsAsRegions_.isEmpty) {
+      return {
+        RegionFieldId.columnName.id: field?.fieldId,
+        RegionFieldId.relativeX0.id: relativeX0,
+        RegionFieldId.relativeY0.id: relativeY0,
+        RegionFieldId.relativeX1.id: relativeX1,
+        RegionFieldId.relativeY1.id: relativeY1,
+      };
+    }
+
+    return {
+      RegionFieldId.columnName.id: field?.fieldId,
+      RegionFieldId.tableCoordinates.id: {
+        RegionFieldId.relativeX0.id: relativeX0,
+        RegionFieldId.relativeY0.id: relativeY0,
+        RegionFieldId.relativeX1.id: relativeX1,
+        RegionFieldId.relativeY1.id: relativeY1,
+      },
+      RegionFieldId.tableColumns.id: subregionsAsRegions_,
+    };
+  }
+
+  @override
+  List<Object?> get props => [
+        field,
+        relativeX0,
+        relativeX1,
+        relativeY0,
+        relativeY1,
+        subregions,
+      ];
+
+  @override
+  bool get stringify => true;
+}
+
+enum RegionFieldId {
+  columnName('columnName'),
+  relativeX0('relativeX0'),
+  relativeY0('relativeY0'),
+  relativeX1('relativeX1'),
+  relativeY1('relativeY1'),
+  tableCoordinates('tableCoordinates'),
+  tableColumns('tableColumns');
+
+  const RegionFieldId(this.id);
+  final String id;
+}
+
+extension RegionMutable on Region {
+  Region divideRegion(List<AISField> tableFields) {
+    if (tableFields.isEmpty) {
+      return this;
+    }
+
+    final subregions_ = <RegionDivision>[];
+
+    final rightEdge = tableFields.last;
+    final fields = tableFields.sublist(0, tableFields.length - 1);
+    final length = fields.length;
+
+    final spacing = 1 / (length + 1);
+    for (var i = 0; i < length; i++) {
+      final relativeX0 = spacing * (i + 1);
+
+      final division = RegionDivision(
+        field: fields[i],
+        relativeToRegionX0: relativeX0,
+        relativeToRegionY0: 0.0,
+      );
+
+      subregions_.add(division);
+    }
+
+    final rightEdgeDivision = RegionDivision(
+      field: rightEdge,
+      relativeToRegionX0: 1.0,
+      relativeToRegionY0: 0.0,
+      isEdge: true,
+    );
+
+    subregions_.add(rightEdgeDivision);
+    return copyWith(subregions: subregions_);
+  }
+
+  Region divisionToRegion({
+    required RegionDivision division,
+    RegionDivision? previousDivision,
+  }) {
+    double relativeX0_ = 0;
+    if (previousDivision != null) {
+      relativeX0_ = previousDivision.relativeToRegionX0 * relativeWidth;
+      relativeX0_ += relativeOriginX;
+    }
+
+    double relativeX1_ = division.relativeToRegionX0 * relativeWidth;
+    relativeX1_ += relativeOriginX;
+
+    return Region(
+      field: division.field,
+      relativeX0: relativeX0_,
+      relativeY0: relativeY0,
+      relativeX1: relativeX1_,
+      relativeY1: relativeY1,
+    );
   }
 
   Region move({
@@ -202,82 +340,4 @@ class Region extends Equatable {
     divisions_[index] = newDivision;
     return copyWith(subregions: divisions_);
   }
-
-  Region divideRegion(List<MTOField> tableFields) {
-    if (tableFields.isEmpty) {
-      return this;
-    }
-
-    final subregions_ = <RegionDivision>[];
-
-    final rightEdge = tableFields.last;
-    final fields = tableFields.sublist(0, tableFields.length - 1);
-    final length = fields.length;
-
-    final spacing = 1 / (length + 1);
-    for (var i = 0; i < length; i++) {
-      final relativeX0 = spacing * (i + 1);
-
-      final division = RegionDivision(
-        field: fields[i],
-        relativeToRegionX0: relativeX0,
-        relativeToRegionY0: 0.0,
-      );
-
-      subregions_.add(division);
-    }
-
-    final rightEdgeDivision = RegionDivision(
-      field: rightEdge,
-      relativeToRegionX0: 1.0,
-      relativeToRegionY0: 0.0,
-      isEdge: true,
-    );
-
-    subregions_.add(rightEdgeDivision);
-    return copyWith(subregions: subregions_);
-  }
-
-  Region copyWith({
-    MTOField? field,
-    double? relativeX0,
-    double? relativeY0,
-    double? relativeX1,
-    double? relativeY1,
-    List<RegionDivision>? subregions,
-  }) {
-    return Region(
-      field: field ?? this.field,
-      relativeX0: relativeX0?.clamp(0, 1) ?? this.relativeX0,
-      relativeY0: relativeY0?.clamp(0, 1) ?? this.relativeY0,
-      relativeX1: relativeX1?.clamp(0, 1) ?? this.relativeX1,
-      relativeY1: relativeY1?.clamp(0, 1) ?? this.relativeY1,
-      subregions: subregions ?? this.subregions,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'columnName': field?.value,
-      'relativeX0': relativeX0,
-      'relativeY0': relativeY0,
-      'relativeX1': relativeX1,
-      'relativeY1': relativeY1,
-      if (subregionsAsRegions.isNotEmpty)
-        'columns': subregionsAsRegions.map((e) => e.toJson()).toList(),
-    };
-  }
-
-  @override
-  List<Object?> get props => [
-        field,
-        relativeX0,
-        relativeX1,
-        relativeY0,
-        relativeY1,
-        subregions,
-      ];
-
-  @override
-  bool get stringify => true;
 }

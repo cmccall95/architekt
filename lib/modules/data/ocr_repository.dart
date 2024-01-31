@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/config/client_http.dart';
 import '../../core/config/logger_custom.dart';
 import '../../core/utils/either.dart';
+import '../domain/a_i_s_table.dart';
 
 part 'ocr_repository.g.dart';
 
@@ -16,7 +17,7 @@ class OcrRepository {
 
   final ClientHttp _client;
 
-  Future<Either<String, void>> applyOcr({
+  Future<Either<String, List<AISTable>>> applyOcr({
     required String pdfPath,
     required String coordinatesPath,
     required String payloadOptionsPath,
@@ -33,10 +34,20 @@ class OcrRepository {
         },
       );
 
-      return response.fold(
-        left: (l) => Left(l.message),
-        right: (r) => const Right(null),
-      );
+      switch (response) {
+        case Left(:final value):
+          return Left(value.message);
+        case Right(:final value):
+          final data = value['data'] as Map<String, dynamic>;
+          final tables = data.entries.map((e) {
+            return AISTable.fromJson({
+              'name': e.key,
+              'data': e.value,
+            });
+          }).toList();
+
+          return Right(tables);
+      }
     } catch (e, stack) {
       logger.e('Failed to apply ocr', error: e, stackTrace: stack);
       return Left(e.toString());

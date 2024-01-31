@@ -7,24 +7,26 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pdfx/pdfx.dart';
 
+import '../../../../core/config/routes.dart';
 import '../../../../core/utils/extensions/global_key.dart';
 import '../../../application/apply_ocr_controller.dart';
 import '../../../application/blueprint_pdf_controller.dart';
 import '../../../application/create_region_controller.dart';
 import '../../../application/region_index_controller.dart';
 import '../../../application/region_list_controller.dart';
-import '../../../domain/m_t_o_fields.dart';
+import '../../../domain/a_i_s_field.dart';
+import '../../../domain/a_i_s_table.dart';
 import '../../../domain/region.dart';
 import '../../widgets/async_helper.dart';
 import '../../widgets/drag_listener.dart';
-import '../../widgets/mto_field_selector.dart';
+import '../../widgets/field_selector.dart';
 import 'widgets/blueprint_footer.dart';
-import 'widgets/exit_app_button.dart';
-import 'widgets/pick_document_button.dart';
 
 part 'widgets/_canvas.dart';
 part 'widgets/_edit_region_dialog.dart';
+part 'widgets/_exit_app_button.dart';
 part 'widgets/_pdf_preview.dart';
+part 'widgets/_pick_document_button.dart';
 part 'widgets/_region_creator.dart';
 part 'widgets/_region_list.dart';
 part 'widgets/_region_list_tile.dart';
@@ -36,7 +38,7 @@ class BlueprintPage extends ConsumerWidget {
 
   void _onApplyOcr({
     required BuildContext context,
-    required AsyncValue<void> state,
+    required AsyncValue<List<AISTable>?> state,
   }) {
     if (state is AsyncError) {
       showDialog(
@@ -51,19 +53,10 @@ class BlueprintPage extends ConsumerWidget {
     }
 
     if (state is AsyncData) {
-      // final controller = Get.find<BlueprintPdfController>();
-      // final document = controller.document.value;
-
-      // Navigator.of(context)
-      //   ..pop()
-      //   ..push(MaterialPageRoute(
-      //     builder: (context) => BlueprintOcrViewer(
-      //       page: controller.page.value,
-      //       data: document!.data,
-      //       image: document.image,
-      //       pdfName: document.sourceName.split('\\').last,
-      //     ),
-      //   ));
+      Navigator.of(context).pushNamed(
+        Routes.mtoTable,
+        arguments: state.value,
+      );
     }
   }
 
@@ -82,18 +75,14 @@ class BlueprintPage extends ConsumerWidget {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // Navigator.of(context).pushNamed(Routes.mtoTable);
-            },
-          ),
           appBar: AppBar(
             centerTitle: true,
             title: const Text('Blueprints Reader'),
             actions: const [
-              ExitAppButton(),
+              _ExitAppButton(),
               SizedBox(width: 12),
               PickDocumentButton(),
+              SizedBox(width: 12),
             ],
           ),
           body: const Column(

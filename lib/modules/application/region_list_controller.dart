@@ -11,6 +11,10 @@ class RegionListController extends _$RegionListController {
     return [];
   }
 
+  void addRegions(List<Region> regions) {
+    state = [...state, ...regions];
+  }
+
   void addRegion(Region region) {
     state = [...state, region];
   }

@@ -35,8 +35,8 @@ class _EditRegionDialog extends HookWidget {
 
   void _deleteFieldChild({
     required int index,
-    required List<MTOField?> tableFields,
-    required ValueChanged<List<MTOField?>> onTableFieldsChanged,
+    required List<AISField?> tableFields,
+    required ValueChanged<List<AISField?>> onTableFieldsChanged,
     required ValueChanged<bool> onIsTableChanged,
   }) {
     final fields = tableFields.toList();
@@ -52,8 +52,8 @@ class _EditRegionDialog extends HookWidget {
   void _validateAndSave({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
-    required MTOField? field,
-    required List<MTOField?> tableFields,
+    required AISField? field,
+    required List<AISField?> tableFields,
   }) {
     if (!formKey.currentState!.validate()) return;
 
@@ -68,9 +68,12 @@ class _EditRegionDialog extends HookWidget {
   Widget build(BuildContext context) {
     final formKey = useMemoized(() => GlobalKey<FormState>());
 
-    final field = useState<MTOField?>(null);
-    final tableFields = useState<List<MTOField?>>([]);
-    final isTable = useState<bool>(false);
+    final field_ = region.field;
+    final tableFields_ = region.divisions.map((e) => e.field).toList();
+
+    final field = useState<AISField?>(field_);
+    final tableFields = useState<List<AISField?>>(tableFields_);
+    final isTable = useState<bool>(tableFields_.isNotEmpty);
 
     return AlertDialog(
       actions: [
@@ -99,7 +102,7 @@ class _EditRegionDialog extends HookWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              MtoFieldSelector(
+              FieldSelector(
                 field: field.value,
                 validator: _validator,
                 onFieldChanged: (value) {
@@ -160,9 +163,9 @@ class _TableColumns extends ConsumerWidget {
     required this.validator,
   });
 
-  final List<MTOField?> fields;
+  final List<AISField?> fields;
   final ValueChanged<int> onDeleted;
-  final ValueChanged<List<MTOField?>> onFieldsChanged;
+  final ValueChanged<List<AISField?>> onFieldsChanged;
   final String? Function(String?)? validator;
 
   @override
@@ -182,7 +185,7 @@ class _TableColumns extends ConsumerWidget {
 
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: paddingVertical),
-            child: MtoFieldSelector(
+            child: FieldSelector(
               field: field,
               validator: validator,
               onFieldChanged: (value) {

@@ -10,7 +10,7 @@ class TableCustomHeader extends StatelessWidget {
   });
 
   final ScrollController horizontalScrollController;
-  final List<MTOField> columns;
+  final List<AISField> columns;
   final OrderBy? sort;
   final ValueChanged<OrderBy>? onSort;
 
@@ -23,8 +23,14 @@ class TableCustomHeader extends StatelessWidget {
       child: ListView.builder(
         controller: horizontalScrollController,
         scrollDirection: Axis.horizontal,
-        itemCount: columns.length,
+        itemCount: columns.length + 1,
         itemBuilder: (context, index) {
+          if (index == 0) {
+            return SizedBox(
+              width: specs.indexColumnWidth,
+            );
+          }
+
           final column = columns[index];
 
           Widget? sortingIndicator;
@@ -56,7 +62,7 @@ class TableCustomHeader extends StatelessWidget {
                   const SizedBox(width: 4),
                 ],
                 Text(
-                  column.name,
+                  column.displayName,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
