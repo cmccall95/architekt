@@ -11,13 +11,13 @@ class TableCustomBody extends StatefulWidget {
     required this.isLastPage,
   });
 
-  final List<AISField> columns;
+  final List<MtoColumns> columns;
   final List<AISTableData> rows;
   final bool isLastPage;
   final ScrollController horizontalScrollController;
 
   final VoidCallback onLoadMore;
-  final Widget Function(AISTableData data, AISField column) cellBuilder;
+  final Widget Function(AISTableData data, MtoColumns column) cellBuilder;
 
   @override
   State<TableCustomBody> createState() => _TableCustomBodyState();
@@ -28,7 +28,7 @@ class _TableCustomBodyState extends State<TableCustomBody> {
 
   Timer? _timer;
 
-  List<AISField> get columns => widget.columns;
+  List<MtoColumns> get columns => widget.columns;
   List<AISTableData> get rows => widget.rows;
 
   double calculateColumnWidth({

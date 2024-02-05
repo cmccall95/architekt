@@ -10,7 +10,7 @@ class TableCustomHeader extends StatelessWidget {
   });
 
   final ScrollController horizontalScrollController;
-  final List<AISField> columns;
+  final List<MtoColumns> columns;
   final OrderBy? sort;
   final ValueChanged<OrderBy>? onSort;
 

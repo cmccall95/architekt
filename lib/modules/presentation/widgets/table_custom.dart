@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/types.dart';
-import '../../domain/a_i_s_field.dart';
+import '../../domain/mto_columns.dart';
 import '../../domain/a_i_s_table_data.dart';
 
 part 'table_custom_body.dart';

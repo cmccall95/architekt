@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../core/config/logger_custom.dart';
 import '../../core/controllers/database_controller.dart';
 import '../domain/a_i_s_data.dart';
-import '../domain/a_i_s_field.dart';
+import '../domain/mto_columns.dart';
 import '../domain/a_i_s_table.dart';
 
 part 'load_table_controller.g.dart';
@@ -54,7 +54,7 @@ class LoadTableController extends _$LoadTableController {
         DROP TABLE IF EXISTS $tableName;
         CREATE TABLE $tableName (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          ${AISField.values.map((e) => '${e.fieldId} TEXT').join(', ')}
+          ${MtoColumns.values.map((e) => '${e.fieldId} TEXT').join(', ')}
         )
       ''');
     } catch (e, stack) {

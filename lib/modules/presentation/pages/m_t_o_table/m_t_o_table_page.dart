@@ -6,7 +6,7 @@ import '../../../../core/utils/extensions/string.dart';
 import '../../../application/get_table_rows_controller.dart';
 import '../../../application/load_table_controller.dart';
 import '../../../domain/a_i_s_data.dart';
-import '../../../domain/a_i_s_field.dart';
+import '../../../domain/mto_columns.dart';
 import '../../../domain/a_i_s_table.dart';
 import '../../widgets/table_custom.dart';
 

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'a_i_s_field.dart';
+import 'mto_columns.dart';
 
 class PayloadOptions extends Equatable {
   const PayloadOptions({
@@ -10,41 +10,41 @@ class PayloadOptions extends Equatable {
     required this.bomMergeOn,
   });
 
-  final List<AISField> aggregateColsGeneral;
-  final List<AISField> keepColsGeneral;
-  final List<AISField> mergeToBom;
-  final List<AISField> bomMergeOn;
+  final List<MtoColumns> aggregateColsGeneral;
+  final List<MtoColumns> keepColsGeneral;
+  final List<MtoColumns> mergeToBom;
+  final List<MtoColumns> bomMergeOn;
 
   static PayloadOptions fromJson(Map<String, dynamic> json) {
-    List<AISField> aggregateColsGeneral = [];
+    List<MtoColumns> aggregateColsGeneral = [];
     final aggregateColsGeneralJson = json['aggregate_cols_general'];
     if (aggregateColsGeneralJson is List<String>) {
       aggregateColsGeneral = aggregateColsGeneralJson.map((e) {
-        return AISField.fromString(e);
+        return MtoColumns.fromString(e);
       }).toList();
     }
 
-    List<AISField> keepColsGeneral = [];
+    List<MtoColumns> keepColsGeneral = [];
     final keepColsGeneralJson = json['keep_cols_general'];
     if (keepColsGeneralJson is List<String>) {
       keepColsGeneral = keepColsGeneralJson.map((e) {
-        return AISField.fromString(e);
+        return MtoColumns.fromString(e);
       }).toList();
     }
 
-    List<AISField> mergeToBom = [];
+    List<MtoColumns> mergeToBom = [];
     final mergeToBomJson = json['merge_to_bom'];
     if (mergeToBomJson is List<String>) {
       mergeToBom = mergeToBomJson.map((e) {
-        return AISField.fromString(e);
+        return MtoColumns.fromString(e);
       }).toList();
     }
 
-    List<AISField> bomMergeOn = [];
+    List<MtoColumns> bomMergeOn = [];
     final bomMergeOnJson = json['bom_merge_on'];
     if (bomMergeOnJson is List<String>) {
       bomMergeOn = bomMergeOnJson.map((e) {
-        return AISField.fromString(e);
+        return MtoColumns.fromString(e);
       }).toList();
     }
 

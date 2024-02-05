@@ -1,3 +1,3 @@
-import '../../modules/domain/a_i_s_field.dart';
+import '../../modules/domain/mto_columns.dart';
 
-typedef OrderBy = ({AISField column, bool ascending});
+typedef OrderBy = ({MtoColumns column, bool ascending});

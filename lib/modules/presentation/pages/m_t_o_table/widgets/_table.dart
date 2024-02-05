@@ -25,7 +25,7 @@ class _Table extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rows = ref.watch(getTableRowsControllerProvider(tableName));
-    const columns = AISField.values;
+    const columns = MtoColumns.values;
 
     final pagination = ref.watch(getTableRowsPaginationProvider(tableName));
     final isLastPage = pagination.maybeWhen(
@@ -84,7 +84,7 @@ class _MTOTableCell extends StatelessWidget {
   });
 
   final AISData row;
-  final AISField column;
+  final MtoColumns column;
 
   @override
   Widget build(BuildContext context) {
