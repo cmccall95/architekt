@@ -3,8 +3,8 @@ import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
 
-import 'a_i_s_field.dart';
 import 'region_division.dart';
+import 'roi_columns.dart';
 
 class Region extends Equatable {
   Region({
@@ -23,7 +23,7 @@ class Region extends Equatable {
     final subregions = json[RegionFieldId.tableColumns.id] as List?;
     if (subregions == null) {
       return Region(
-        field: AISField.fromString(json[RegionFieldId.columnName.id]),
+        field: RoiColumns.fromString(json[RegionFieldId.columnName.id]),
         relativeX0: json[RegionFieldId.relativeX0.id] as double,
         relativeY0: json[RegionFieldId.relativeY0.id] as double,
         relativeX1: json[RegionFieldId.relativeX1.id] as double,
@@ -33,7 +33,7 @@ class Region extends Equatable {
 
     final coordinates = json[RegionFieldId.tableCoordinates.id];
     return Region(
-      field: AISField.fromString(json[RegionFieldId.columnName.id]),
+      field: RoiColumns.fromString(json[RegionFieldId.columnName.id]),
       relativeX0: coordinates[RegionFieldId.relativeX0.id] as double,
       relativeY0: coordinates[RegionFieldId.relativeY0.id] as double,
       relativeX1: coordinates[RegionFieldId.relativeX1.id] as double,
@@ -49,7 +49,7 @@ class Region extends Equatable {
     );
   }
 
-  final AISField? field;
+  final RoiColumns? field;
   final List<RegionDivision> subregions;
 
   final double relativeX0;
@@ -101,7 +101,7 @@ class Region extends Equatable {
   }
 
   Region copyWith({
-    AISField? field,
+    RoiColumns? field,
     double? relativeX0,
     double? relativeY0,
     double? relativeX1,
@@ -173,7 +173,7 @@ enum RegionFieldId {
 }
 
 extension RegionMutable on Region {
-  Region divideRegion(List<AISField> tableFields) {
+  Region divideRegion(List<RoiColumns> tableFields) {
     if (tableFields.isEmpty) {
       return this;
     }

@@ -35,8 +35,8 @@ class _EditRegionDialog extends HookWidget {
 
   void _deleteFieldChild({
     required int index,
-    required List<AISField?> tableFields,
-    required ValueChanged<List<AISField?>> onTableFieldsChanged,
+    required List<RoiColumns?> tableFields,
+    required ValueChanged<List<RoiColumns?>> onTableFieldsChanged,
     required ValueChanged<bool> onIsTableChanged,
   }) {
     final fields = tableFields.toList();
@@ -52,8 +52,8 @@ class _EditRegionDialog extends HookWidget {
   void _validateAndSave({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
-    required AISField? field,
-    required List<AISField?> tableFields,
+    required RoiColumns? field,
+    required List<RoiColumns?> tableFields,
   }) {
     if (!formKey.currentState!.validate()) return;
 
@@ -71,8 +71,8 @@ class _EditRegionDialog extends HookWidget {
     final field_ = region.field;
     final tableFields_ = region.divisions.map((e) => e.field).toList();
 
-    final field = useState<AISField?>(field_);
-    final tableFields = useState<List<AISField?>>(tableFields_);
+    final field = useState<RoiColumns?>(field_);
+    final tableFields = useState<List<RoiColumns?>>(tableFields_);
     final isTable = useState<bool>(tableFields_.isNotEmpty);
 
     return AlertDialog(
@@ -163,9 +163,9 @@ class _TableColumns extends ConsumerWidget {
     required this.validator,
   });
 
-  final List<AISField?> fields;
+  final List<RoiColumns?> fields;
   final ValueChanged<int> onDeleted;
-  final ValueChanged<List<AISField?>> onFieldsChanged;
+  final ValueChanged<List<RoiColumns?>> onFieldsChanged;
   final String? Function(String?)? validator;
 
   @override

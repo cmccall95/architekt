@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:arkitekt/core/config/logger_custom.dart';
+import 'package:arkitekt/modules/domain/roi_columns.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -15,7 +16,6 @@ import '../../../application/blueprint_pdf_controller.dart';
 import '../../../application/create_region_controller.dart';
 import '../../../application/region_index_controller.dart';
 import '../../../application/region_list_controller.dart';
-import '../../../domain/a_i_s_field.dart';
 import '../../../domain/a_i_s_table.dart';
 import '../../../domain/region.dart';
 import '../../widgets/async_helper.dart';

@@ -337,24 +337,6 @@ enum AISField {
     displayName: 'Sys Path',
     scope: [],
   ),
-  bom(
-    fieldId: 'bom',
-    defaultName: 'BOM',
-    displayName: 'BOM',
-    scope: [AISFieldScope.general],
-  ),
-  spec(
-    fieldId: 'spec',
-    defaultName: 'Spec',
-    displayName: 'Spec',
-    scope: [AISFieldScope.general],
-  ),
-  fab(
-    fieldId: 'fab',
-    defaultName: 'Fab',
-    displayName: 'Fab',
-    scope: [AISFieldScope.general],
-  ),
   ;
 
   const AISField({
@@ -427,9 +409,6 @@ enum AISField {
       'sys_build' => AISField.sysBuild,
       'sys_filename' => AISField.sysFilename,
       'sys_path' => AISField.sysPath,
-      'bom' => AISField.bom,
-      'spec' => AISField.spec,
-      'fab' => AISField.fab,
       _ => AISField.drawing,
     };
   }

@@ -61,7 +61,7 @@ class ColumnItem extends ConsumerWidget {
           child: Row(
             children: [
               Expanded(
-                child: Text(region.field?.displayName ?? '-'),
+                child: Text(region.field?.defaultName ?? '-'),
               ),
               PopupMenuButton(
                 onSelected: (value) async {

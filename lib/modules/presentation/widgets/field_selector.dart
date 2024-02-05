@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/a_i_s_field.dart';
+import '../../domain/roi_columns.dart';
 
 part 'field_selector.g.dart';
 
@@ -18,8 +18,8 @@ class FieldSelector extends HookConsumerWidget {
     this.validator,
   });
 
-  final AISField? field;
-  final ValueChanged<AISField> onFieldChanged;
+  final RoiColumns? field;
+  final ValueChanged<RoiColumns> onFieldChanged;
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
 
@@ -105,7 +105,7 @@ class FieldSelector extends HookConsumerWidget {
       child: TextFormField(
         key: ValueKey('textfield_${field}_${timestamp.value}'),
         focusNode: focusNode,
-        initialValue: field?.displayName,
+        initialValue: field?.defaultName,
         validator: validator,
         onChanged: (value) {
           final notifier = ref.read(_fieldNameProvider.notifier);
@@ -127,14 +127,14 @@ class _OptionsDropdown extends ConsumerWidget {
     required this.onValueChanged,
   });
 
-  final ValueChanged<AISField> onValueChanged;
+  final ValueChanged<RoiColumns> onValueChanged;
   final double maxHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final query = ref.watch(_fieldNameProvider);
 
-    final columns = AISField.values.where((element) {
+    final columns = RoiColumns.values.where((element) {
       final name = element.name.toLowerCase();
       return name.contains(query?.toLowerCase() ?? '');
     }).toList();
@@ -155,7 +155,7 @@ class _OptionsDropdown extends ConsumerWidget {
               final field = columns[index];
 
               return ListTile(
-                title: Text(field.displayName),
+                title: Text(field.defaultName),
                 onTap: () {
                   final notifier = ref.read(_fieldNameProvider.notifier);
                   notifier.state = '';
