@@ -116,7 +116,7 @@ class PickDocumentButton extends ConsumerWidget {
       }
     ];
 
-    final regions = json.map((e) => Region.fromJson(e)).toList();
+    final regions = json.map((e) => Roi.fromJson(e)).toList();
 
     final notifier = ref.read(regionListControllerProvider.notifier);
     notifier.clear();

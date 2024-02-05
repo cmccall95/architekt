@@ -1,7 +1,7 @@
 part of '../blueprint_page.dart';
 
 class _RegionPainter extends CustomPainter {
-  final Region region;
+  final Roi region;
   final bool isSelected;
 
   final double canvasWidth;

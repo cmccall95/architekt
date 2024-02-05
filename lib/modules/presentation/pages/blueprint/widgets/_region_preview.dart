@@ -11,17 +11,17 @@ class _RegionPreview extends HookConsumerWidget {
     required this.onRegionSelected,
   });
 
-  final Region region;
+  final Roi region;
   final bool isSelected;
 
   final double canvasWidth;
   final double canvasHeight;
   final GlobalKey canvasKey;
-  final ValueChanged<Region> onRegionChanged;
-  final ValueChanged<Region> onRegionSelected;
+  final ValueChanged<Roi> onRegionChanged;
+  final ValueChanged<Roi> onRegionSelected;
 
   int? divisionTouchedIndex({
-    required Region region,
+    required Roi region,
     required Offset positionOnRegion,
   }) {
     final regionWidth = region.relativeWidth * canvasWidth;
@@ -44,7 +44,7 @@ class _RegionPreview extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final region = useState(this.region);
-    final startRegion = useState<Region?>(null);
+    final startRegion = useState<Roi?>(null);
     final startPosition = useState<Offset?>(null);
     final touchedPosition = useState<_TouchPosition?>(null);
     final touchedDivisionIndex = useState<int?>(null);

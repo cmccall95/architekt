@@ -8,7 +8,7 @@ import '../../core/config/logger_custom.dart';
 import '../../core/utils/extensions/file.dart';
 import '../data/ocr_repository.dart';
 import '../domain/a_i_s_table.dart';
-import '../domain/region.dart';
+import '../domain/roi.dart';
 
 part 'apply_ocr_controller.g.dart';
 
@@ -21,7 +21,7 @@ class ApplyOcrController extends _$ApplyOcrController {
 
   Future<void> applyOcr({
     required File document,
-    required List<Region> regions,
+    required List<Roi> regions,
   }) async {
     state = const AsyncLoading();
 
@@ -64,7 +64,7 @@ class ApplyOcrController extends _$ApplyOcrController {
     }
   }
 
-  Future<String> _generateCoordinatesFile(List<Region> regions) async {
+  Future<String> _generateCoordinatesFile(List<Roi> regions) async {
     try {
       final separator = Platform.pathSeparator;
       final tempDir = Directory.systemTemp.path;

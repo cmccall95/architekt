@@ -11,7 +11,7 @@ class _Canvas extends HookConsumerWidget {
 
   Future<void> _onCreateRegion({
     required WidgetRef ref,
-    required Region rawRegion,
+    required Roi rawRegion,
   }) async {
     final region_ = await _EditRegionDialog.show(
       context: ref.context,
@@ -32,8 +32,8 @@ class _Canvas extends HookConsumerWidget {
 
   void _onUpdateRegionShape({
     required WidgetRef ref,
-    required Region oldRegion,
-    required Region rawRegion,
+    required Roi oldRegion,
+    required Roi rawRegion,
   }) {
     final notifier = ref.read(regionListControllerProvider.notifier);
     notifier.updateRegion(oldRegion, rawRegion);

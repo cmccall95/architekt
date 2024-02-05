@@ -3,11 +3,11 @@ import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
 
-import 'region_division.dart';
+import 'roi_division.dart';
 import 'roi_columns.dart';
 
-class Region extends Equatable {
-  Region({
+class Roi extends Equatable {
+  Roi({
     this.field,
     this.subregions = const [],
     required double relativeX0,
@@ -19,10 +19,10 @@ class Region extends Equatable {
         relativeX1 = relativeX1.clamp(0, 1),
         relativeY1 = relativeY1.clamp(0, 1);
 
-  factory Region.fromJson(Map<String, dynamic> json) {
+  factory Roi.fromJson(Map<String, dynamic> json) {
     final subregions = json[RegionFieldId.tableColumns.id] as List?;
     if (subregions == null) {
-      return Region(
+      return Roi(
         field: RoiColumns.fromString(json[RegionFieldId.columnName.id]),
         relativeX0: json[RegionFieldId.relativeX0.id] as double,
         relativeY0: json[RegionFieldId.relativeY0.id] as double,
@@ -32,15 +32,15 @@ class Region extends Equatable {
     }
 
     final coordinates = json[RegionFieldId.tableCoordinates.id];
-    return Region(
+    return Roi(
       field: RoiColumns.fromString(json[RegionFieldId.columnName.id]),
       relativeX0: coordinates[RegionFieldId.relativeX0.id] as double,
       relativeY0: coordinates[RegionFieldId.relativeY0.id] as double,
       relativeX1: coordinates[RegionFieldId.relativeX1.id] as double,
       relativeY1: coordinates[RegionFieldId.relativeY1.id] as double,
       subregions: subregions.map((e) {
-        final region = Region.fromJson(e);
-        return RegionDivision(
+        final region = Roi.fromJson(e);
+        return RoiDivision(
           field: region.field,
           relativeToRegionX0: region.relativeX1,
           relativeToRegionY0: region.relativeY0,
@@ -50,7 +50,7 @@ class Region extends Equatable {
   }
 
   final RoiColumns? field;
-  final List<RegionDivision> subregions;
+  final List<RoiDivision> subregions;
 
   final double relativeX0;
   final double relativeY0;
@@ -64,7 +64,7 @@ class Region extends Equatable {
 
   /// return the subregions without the last one which represent the edge of the
   /// region
-  List<RegionDivision> get divisions {
+  List<RoiDivision> get divisions {
     final subregions_ = subregions.toList();
     if (subregions_.isEmpty) return subregions_;
 
@@ -72,8 +72,8 @@ class Region extends Equatable {
     return subregions_;
   }
 
-  List<Region> get subregionsAsRegions {
-    List<Region> subregions_ = [];
+  List<Roi> get subregionsAsRegions {
+    List<Roi> subregions_ = [];
     for (var i = 0; i < subregions.length; i++) {
       double relativeX0_ = relativeOriginX;
       if (i > 0) {
@@ -86,7 +86,7 @@ class Region extends Equatable {
       double relativeX1_ = division.relativeToRegionX0 * relativeWidth;
       relativeX1_ += relativeOriginX;
 
-      final subregion = Region(
+      final subregion = Roi(
         field: division.field,
         relativeX0: relativeX0_,
         relativeY0: relativeY0,
@@ -100,15 +100,15 @@ class Region extends Equatable {
     return subregions_;
   }
 
-  Region copyWith({
+  Roi copyWith({
     RoiColumns? field,
     double? relativeX0,
     double? relativeY0,
     double? relativeX1,
     double? relativeY1,
-    List<RegionDivision>? subregions,
+    List<RoiDivision>? subregions,
   }) {
-    return Region(
+    return Roi(
       field: field ?? this.field,
       relativeX0: relativeX0?.clamp(0, 1) ?? this.relativeX0,
       relativeY0: relativeY0?.clamp(0, 1) ?? this.relativeY0,
@@ -172,13 +172,13 @@ enum RegionFieldId {
   final String id;
 }
 
-extension RegionMutable on Region {
-  Region divideRegion(List<RoiColumns> tableFields) {
+extension RegionMutable on Roi {
+  Roi divideRegion(List<RoiColumns> tableFields) {
     if (tableFields.isEmpty) {
       return this;
     }
 
-    final subregions_ = <RegionDivision>[];
+    final subregions_ = <RoiDivision>[];
 
     final rightEdge = tableFields.last;
     final fields = tableFields.sublist(0, tableFields.length - 1);
@@ -188,7 +188,7 @@ extension RegionMutable on Region {
     for (var i = 0; i < length; i++) {
       final relativeX0 = spacing * (i + 1);
 
-      final division = RegionDivision(
+      final division = RoiDivision(
         field: fields[i],
         relativeToRegionX0: relativeX0,
         relativeToRegionY0: 0.0,
@@ -197,7 +197,7 @@ extension RegionMutable on Region {
       subregions_.add(division);
     }
 
-    final rightEdgeDivision = RegionDivision(
+    final rightEdgeDivision = RoiDivision(
       field: rightEdge,
       relativeToRegionX0: 1.0,
       relativeToRegionY0: 0.0,
@@ -208,9 +208,9 @@ extension RegionMutable on Region {
     return copyWith(subregions: subregions_);
   }
 
-  Region divisionToRegion({
-    required RegionDivision division,
-    RegionDivision? previousDivision,
+  Roi divisionToRegion({
+    required RoiDivision division,
+    RoiDivision? previousDivision,
   }) {
     double relativeX0_ = 0;
     if (previousDivision != null) {
@@ -221,7 +221,7 @@ extension RegionMutable on Region {
     double relativeX1_ = division.relativeToRegionX0 * relativeWidth;
     relativeX1_ += relativeOriginX;
 
-    return Region(
+    return Roi(
       field: division.field,
       relativeX0: relativeX0_,
       relativeY0: relativeY0,
@@ -230,7 +230,7 @@ extension RegionMutable on Region {
     );
   }
 
-  Region move({
+  Roi move({
     required Offset positionOnCanvas,
     required Offset startPositionOnCanvas,
     required double canvasWidth,
@@ -262,7 +262,7 @@ extension RegionMutable on Region {
     );
   }
 
-  Region resize({
+  Roi resize({
     required double startOriginRelativeX,
     required double startOriginRelativeY,
     required double startRelativeWidth,
@@ -311,7 +311,7 @@ extension RegionMutable on Region {
     );
   }
 
-  Region resizeDivision({
+  Roi resizeDivision({
     required int index,
     required double regionWidth,
     required Offset positionOnRegion,

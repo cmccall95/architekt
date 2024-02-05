@@ -6,13 +6,13 @@ class _EditRegionDialog extends HookWidget {
     required this.region,
   });
 
-  final Region region;
+  final Roi region;
 
-  static Future<Region?> show({
+  static Future<Roi?> show({
     required BuildContext context,
-    required Region region,
+    required Roi region,
   }) async {
-    final region_ = await showDialog<Region>(
+    final region_ = await showDialog<Roi>(
       context: context,
       builder: (context) {
         return _EditRegionDialog._(
@@ -21,7 +21,7 @@ class _EditRegionDialog extends HookWidget {
       },
     );
 
-    if (region_ is! Region) return null;
+    if (region_ is! Roi) return null;
     return region_;
   }
 

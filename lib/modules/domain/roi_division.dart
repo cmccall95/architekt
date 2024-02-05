@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'region.dart';
+import 'roi.dart';
 import 'roi_columns.dart';
 
-class RegionDivision extends Equatable {
-  const RegionDivision({
+class RoiDivision extends Equatable {
+  const RoiDivision({
     this.field,
     required this.relativeToRegionX0,
     required this.relativeToRegionY0,
@@ -19,7 +19,7 @@ class RegionDivision extends Equatable {
   final bool isEdge;
 
   double toCanvasX0({
-    required Region region,
+    required Roi region,
     required double canvasWidth,
   }) {
     final relativeX =
@@ -28,7 +28,7 @@ class RegionDivision extends Equatable {
   }
 
   double toCanvasY0({
-    required Region region,
+    required Roi region,
     required double canvasHeight,
   }) {
     final relativeY =
@@ -36,12 +36,12 @@ class RegionDivision extends Equatable {
     return relativeY;
   }
 
-  RegionDivision copyWith({
+  RoiDivision copyWith({
     RoiColumns? field,
     double? relativeToRegionX0,
     double? relativeToRegionY0,
   }) {
-    return RegionDivision(
+    return RoiDivision(
       field: field ?? this.field,
       relativeToRegionX0: relativeToRegionX0 ?? this.relativeToRegionX0,
       relativeToRegionY0: relativeToRegionY0 ?? this.relativeToRegionY0,

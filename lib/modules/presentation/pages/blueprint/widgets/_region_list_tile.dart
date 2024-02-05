@@ -8,7 +8,7 @@ class ColumnItem extends ConsumerWidget {
   });
 
   final int index;
-  final Region region;
+  final Roi region;
 
   void _onDelete({
     required BuildContext context,

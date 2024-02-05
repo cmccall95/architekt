@@ -17,7 +17,7 @@ import '../../../application/create_region_controller.dart';
 import '../../../application/region_index_controller.dart';
 import '../../../application/region_list_controller.dart';
 import '../../../domain/a_i_s_table.dart';
-import '../../../domain/region.dart';
+import '../../../domain/roi.dart';
 import '../../widgets/async_helper.dart';
 import '../../widgets/drag_listener.dart';
 import '../../widgets/field_selector.dart';

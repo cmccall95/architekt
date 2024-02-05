@@ -2,17 +2,17 @@ import 'dart:ui';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../domain/region.dart';
+import '../domain/roi.dart';
 
 part 'create_region_controller.g.dart';
 
 @riverpod
 class CreateRegionController extends _$CreateRegionController {
-  Region? _startRegion;
+  Roi? _startRegion;
   Offset? _startPosition;
 
   @override
-  Region? build() {
+  Roi? build() {
     return null;
   }
 
@@ -22,7 +22,7 @@ class CreateRegionController extends _$CreateRegionController {
     required double canvasHeight,
   }) {
     _startPosition = positionOnCanvas;
-    _startRegion = Region(
+    _startRegion = Roi(
       relativeX0: positionOnCanvas.dx / canvasWidth,
       relativeY0: positionOnCanvas.dy / canvasHeight,
       relativeX1: positionOnCanvas.dx / canvasWidth,
@@ -38,7 +38,7 @@ class CreateRegionController extends _$CreateRegionController {
     required double canvasHeight,
   }) {
     var region = state;
-    region ??= Region(
+    region ??= Roi(
       relativeX0: positionOnCanvas.dx / canvasWidth,
       relativeY0: positionOnCanvas.dy / canvasHeight,
       relativeX1: positionOnCanvas.dx / canvasWidth,

@@ -11,7 +11,7 @@ class _RegionCreator extends HookConsumerWidget {
   final double canvasWidth;
   final double canvasHeight;
   final GlobalKey canvasKey;
-  final ValueChanged<Region> onRegionChanged;
+  final ValueChanged<Roi> onRegionChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
