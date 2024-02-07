@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:arkitekt/core/config/logger_custom.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
@@ -237,15 +236,8 @@ extension RegionMutable on Roi {
     double relativeToRegionX0 = relativeOriginX - region.relativeOriginX;
     relativeToRegionX0 /= region.relativeWidth;
 
-    logger.wtf({
-      'relativeToRegionX0': relativeToRegionX0,
-      'relativeOriginX': relativeOriginX,
-      'region.relativeOriginX': region.relativeOriginX,
-      'region.relativeWidth': region.relativeWidth,
-    });
-
     return RoiDivision(
-      field: region.field,
+      field: field,
       relativeToRegionX0: relativeToRegionX0,
       relativeToRegionY0: 0.0,
     );
