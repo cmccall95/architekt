@@ -113,7 +113,6 @@ class BlueprintPage extends ConsumerWidget {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
           appBar: AppBar(
-            centerTitle: true,
             title: const Text('Blueprints Reader'),
             actions: const [
               _ExitAppButton(),

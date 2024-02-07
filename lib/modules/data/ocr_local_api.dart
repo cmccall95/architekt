@@ -1,3 +1,4 @@
+import 'package:arkitekt/modules/domain/export_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -102,8 +103,8 @@ class OcrLocalApi {
   }
 
   Future<Either<String, List<AISTableData>>> getMtos({
-    required int limit,
-    required int offset,
+    int? limit,
+    int? offset,
   }) async {
     try {
       final db = await localDatabase.database;
@@ -123,6 +124,64 @@ class OcrLocalApi {
       return Right(mtos);
     } catch (e, stack) {
       logger.e('Failed to get mtos $e', stackTrace: stack);
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, List<AISTableData>>> getGeneralData({
+    int? limit,
+    int? offset,
+  }) async {
+    try {
+      final db = await localDatabase.database;
+      final res = await db.query(
+        DBTables.generalData.value,
+        limit: limit,
+        offset: offset,
+      );
+
+      final mtos = res.map((row) {
+        return AISTableData(
+          id: row['id'] as int,
+          data: Mto.fromJson(row),
+        );
+      }).toList();
+
+      return Right(mtos);
+    } catch (e, stack) {
+      logger.e('Failed to get mtos $e', stackTrace: stack);
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, ExportData>> getExportData() async {
+    try {
+      final db = await localDatabase.database;
+      final mtoData = await db.query(DBTables.mto.value);
+      final generalData = await db.query(DBTables.generalData.value);
+
+      final getColumnsMto_ = await getColumnsMto();
+      final mtoColumns = getColumnsMto_.fold(
+        left: (l) => throw getColumnsMto_,
+        right: (r) => r,
+      );
+
+      final getColumnsGeneralData_ = await getColumnsGeneralData();
+      final generalDataColumns = getColumnsGeneralData_.fold(
+        left: (l) => throw getColumnsGeneralData_,
+        right: (r) => r,
+      );
+
+      return Right(ExportData(
+        mtoData: mtoData,
+        generalData: generalData,
+        mtoColumns: mtoColumns,
+        generalColumns: generalDataColumns,
+      ));
+    } on Left {
+      rethrow;
+    } catch (e, stack) {
+      logger.e('Failed to get export data $e', stackTrace: stack);
       return Left(e.toString());
     }
   }

@@ -25,7 +25,7 @@ class GetGeneralDataController extends _$GetGeneralDataController {
       state = const AsyncLoading();
 
       final repository = ref.watch(ocrLocalApiProvider);
-      final res = await repository.getMtos(limit: limit, offset: 0);
+      final res = await repository.getGeneralData(limit: limit, offset: 0);
 
       switch (res) {
         case Left(:final value):
@@ -56,7 +56,10 @@ class GetGeneralDataController extends _$GetGeneralDataController {
           notifier.state = const AsyncLoading();
 
           final repository = ref.watch(ocrLocalApiProvider);
-          final res = await repository.getMtos(limit: limit, offset: offset);
+          final res = await repository.getGeneralData(
+            limit: limit,
+            offset: offset,
+          );
 
           switch (res) {
             case Left(:final value):
