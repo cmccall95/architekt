@@ -79,7 +79,7 @@ With FVM installed, you can use it to manage Flutter versions for your project.
 
    on Windows:
    ```shell
-   docker run -d -p 5000:5000 -v "%TEMP%/AIS_MarkupExtractor/input:/app/downloads" -v "%TEMP%/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektisdev/architektis:latest
+   docker run -d -p 5000:5000 -v "${env:TEMP}/AIS_MarkupExtractor/input:/app/downloads" -v "${env:TEMP}/AIS_MarkupExtractor/output:/app/AIS_MarkupExtractor" architektisdev/architektis:latest
    ```
 
 4. Verify that the Docker image is running by navigating to `http://localhost:5000` in your browser and check for the following message:
@@ -114,7 +114,7 @@ With FVM installed, you can use it to manage Flutter versions for your project.
 2. Build generated files:
 
    ```shell
-   dart pub run build_runner build
+   dart run build_runner build
    ```
 
 3. Run the project:
@@ -124,3 +124,19 @@ With FVM installed, you can use it to manage Flutter versions for your project.
    ```
 
 **note:** If you are using FVM, just replace `flutter` with `fvm flutter` in the commands above.
+
+## Debugging docker
+
+If you encounter any issues with the http requests to the docker server, you can view the logs to help you debug the issue.
+
+1. to get a list of [CONTAINER_ID] run:
+
+```shell
+docker ps
+```
+
+2. to view the logs run:
+
+```shell
+docker logs [CONTAINER_ID_OR_NAME]
+```
