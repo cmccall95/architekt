@@ -1,4 +1,3 @@
-import 'package:arkitekt/core/config/logger_custom.dart';
 import 'package:path/path.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sqflite/sqflite.dart';
@@ -120,7 +119,10 @@ class LocalDatabase {
         ${MtoColumns.weldType.fieldId} TEXT,
         ${MtoColumns.additionalInformation.fieldId} TEXT,
         ${MtoColumns.excludeFromRfq.fieldId} TEXT,
-        ${MtoColumns.takeoffNotes.fieldId} TEXT
+        ${MtoColumns.takeoffNotes.fieldId} TEXT,
+        ${MtoColumns.maxElevation.fieldId} TEXT,
+        ${MtoColumns.minElevation.fieldId} TEXT,
+        ${MtoColumns.averageElevation.fieldId} TEXT
       )
       ''');
 
@@ -199,7 +201,10 @@ class LocalDatabase {
         ${MtoColumns.weldType.fieldId} TEXT,
         ${MtoColumns.additionalInformation.fieldId} TEXT,
         ${MtoColumns.excludeFromRfq.fieldId} TEXT,
-        ${MtoColumns.takeoffNotes.fieldId} TEXT
+        ${MtoColumns.takeoffNotes.fieldId} TEXT,
+        ${MtoColumns.maxElevation.fieldId} TEXT,
+        ${MtoColumns.minElevation.fieldId} TEXT,
+        ${MtoColumns.averageElevation.fieldId} TEXT
       )
       ''');
   }

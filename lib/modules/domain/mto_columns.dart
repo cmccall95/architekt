@@ -439,6 +439,24 @@ enum MtoColumns {
     displayName: 'Takeoff Notes',
     scope: [MtoFieldScope.piping],
   ),
+  maxElevation(
+    fieldId: 'max_elevation',
+    defaultName: 'Max Elevation',
+    displayName: 'Max Elevation',
+    scope: [MtoFieldScope.general],
+  ),
+  minElevation(
+    fieldId: 'min_elevation',
+    defaultName: 'Min Elevation',
+    displayName: 'Min Elevation',
+    scope: [MtoFieldScope.general],
+  ),
+  averageElevation(
+    fieldId: 'average_elevation',
+    defaultName: 'Average Elevation',
+    displayName: 'Average Elevation',
+    scope: [MtoFieldScope.general],
+  ),
   ;
 
   const MtoColumns({
@@ -528,6 +546,9 @@ enum MtoColumns {
       'additional_information' => MtoColumns.additionalInformation,
       'exclude_from_rfq' => MtoColumns.excludeFromRfq,
       'takeoff_notes' => MtoColumns.takeoffNotes,
+      'max_elevation' => MtoColumns.maxElevation,
+      'min_elevation' => MtoColumns.minElevation,
+      'average_elevation' => MtoColumns.averageElevation,
       _ => MtoColumns.drawing,
     };
   }

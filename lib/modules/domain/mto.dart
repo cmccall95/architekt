@@ -77,6 +77,9 @@ class Mto extends Equatable {
     this.additionalInformation,
     this.excludeFromRfq,
     this.takeoffNotes,
+    this.maxElevation,
+    this.minElevation,
+    this.averageElevation,
   });
 
   final String? drawing;
@@ -152,6 +155,9 @@ class Mto extends Equatable {
   final String? additionalInformation;
   final String? excludeFromRfq;
   final String? takeoffNotes;
+  final String? maxElevation;
+  final String? minElevation;
+  final String? averageElevation;
 
   String? dataFromField(MtoColumns field) {
     return switch (field) {
@@ -228,6 +234,9 @@ class Mto extends Equatable {
       MtoColumns.additionalInformation => additionalInformation,
       MtoColumns.excludeFromRfq => excludeFromRfq,
       MtoColumns.takeoffNotes => takeoffNotes,
+      MtoColumns.maxElevation => maxElevation,
+      MtoColumns.minElevation => minElevation,
+      MtoColumns.averageElevation => averageElevation,
     };
   }
 
@@ -289,6 +298,26 @@ class Mto extends Equatable {
       sysBuild: json[MtoColumns.sysBuild.fieldId],
       sysFilename: json[MtoColumns.sysFilename.fieldId],
       sysPath: json[MtoColumns.sysPath.fieldId],
+      generalCategory: json[MtoColumns.generalCategory.fieldId],
+      rfqScope: json[MtoColumns.rfqScope.fieldId],
+      size1: json[MtoColumns.size1.fieldId],
+      size2: json[MtoColumns.size2.fieldId],
+      schedule: json[MtoColumns.schedule.fieldId],
+      rating: json[MtoColumns.rating.fieldId],
+      astm: json[MtoColumns.astm.fieldId],
+      grade: json[MtoColumns.grade.fieldId],
+      asmeAnsi: json[MtoColumns.asmeAnsi.fieldId],
+      material: json[MtoColumns.material.fieldId],
+      coating: json[MtoColumns.coating.fieldId],
+      forging: json[MtoColumns.forging.fieldId],
+      ends: json[MtoColumns.ends.fieldId],
+      weldType: json[MtoColumns.weldType.fieldId],
+      additionalInformation: json[MtoColumns.additionalInformation.fieldId],
+      excludeFromRfq: json[MtoColumns.excludeFromRfq.fieldId],
+      takeoffNotes: json[MtoColumns.takeoffNotes.fieldId],
+      maxElevation: json[MtoColumns.maxElevation.fieldId],
+      minElevation: json[MtoColumns.minElevation.fieldId],
+      averageElevation: json[MtoColumns.averageElevation.fieldId],
     );
   }
 
@@ -367,6 +396,9 @@ class Mto extends Equatable {
       MtoColumns.additionalInformation.fieldId: additionalInformation,
       MtoColumns.excludeFromRfq.fieldId: excludeFromRfq,
       MtoColumns.takeoffNotes.fieldId: takeoffNotes,
+      MtoColumns.maxElevation.fieldId: maxElevation,
+      MtoColumns.minElevation.fieldId: minElevation,
+      MtoColumns.averageElevation.fieldId: averageElevation,
     };
   }
 
@@ -446,6 +478,9 @@ class Mto extends Equatable {
       additionalInformation,
       excludeFromRfq,
       takeoffNotes,
+      maxElevation,
+      minElevation,
+      averageElevation,
     ];
   }
 

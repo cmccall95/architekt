@@ -223,6 +223,18 @@ enum RoiColumns {
     fieldId: 'fab',
     defaultName: 'Fab',
   ),
+  spoon(
+    fieldId: 'spoon',
+    defaultName: 'Spoon',
+  ),
+  notesComments(
+    fieldId: 'notes_comments',
+    defaultName: 'Notes/Comments',
+  ),
+  status(
+    fieldId: 'status',
+    defaultName: 'Status',
+  ),
   ;
 
   const RoiColumns({
@@ -291,6 +303,9 @@ enum RoiColumns {
       'bom' => RoiColumns.bom,
       'spec' => RoiColumns.spec,
       'fab' => RoiColumns.fab,
+      'spoon' => RoiColumns.spoon,
+      'notes_comments' => RoiColumns.notesComments,
+      'status' => RoiColumns.status,
       _ => RoiColumns.drawing,
     };
   }
