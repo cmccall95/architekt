@@ -58,7 +58,7 @@ class ApplyOcrController extends _$ApplyOcrController {
 
       await pdf.copy(newPath);
 
-      return '${Env.inputPathDocker}/${pdf.name}';
+      return '${Env.inputPathDocker}/document.pdf';
     } catch (e) {
       rethrow;
     }
