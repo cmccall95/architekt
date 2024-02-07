@@ -1,10 +1,45 @@
 part of '../blueprint_page.dart';
 
-class _RegionsList extends StatelessWidget {
+class _RegionsList extends ConsumerWidget {
   const _RegionsList({super.key});
 
+  Future<void> uploadCoordinates({
+    required BuildContext context,
+    required WidgetRef ref,
+  }) async {
+    final coordinates = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: const ['json'],
+    );
+
+    if (coordinates == null) {
+      return;
+    }
+
+    final file = File(coordinates.files.single.path!);
+    final contents = await file.readAsString();
+    if (!context.mounted) return;
+
+    final json = jsonDecode(contents);
+    if (json is! List) {
+      ErrorDialog.show(
+        context: context,
+        title: 'Invalid file',
+        message: 'The file must contain a list of regions',
+      );
+
+      return;
+    }
+
+    final regions = json.map((e) => Roi.fromJson(e)).toList();
+
+    final notifier = ref.read(regionListControllerProvider.notifier);
+    notifier.clear();
+    notifier.addRegions(regions);
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       width: 300,
       padding: const EdgeInsets.all(5),
@@ -13,9 +48,28 @@ class _RegionsList extends StatelessWidget {
           Container(
             height: 56,
             alignment: Alignment.center,
-            child: Text(
-              'Columns to extract',
-              style: Theme.of(context).textTheme.titleSmall,
+            child: Row(
+              children: [
+                const SizedBox(width: 56 + 8),
+                Expanded(
+                  child: Text(
+                    'Columns to extract',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 56,
+                  child: TextButton(
+                    onPressed: () => uploadCoordinates(
+                      context: context,
+                      ref: ref,
+                    ),
+                    child: const Icon(Icons.upload_rounded),
+                  ),
+                )
+              ],
             ),
           ),
           Expanded(
