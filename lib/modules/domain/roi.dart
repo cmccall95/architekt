@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:arkitekt/core/config/logger_custom.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
 import 'roi_division.dart';
@@ -18,36 +20,6 @@ class Roi extends Equatable {
         relativeY0 = relativeY0.clamp(0, 1),
         relativeX1 = relativeX1.clamp(0, 1),
         relativeY1 = relativeY1.clamp(0, 1);
-
-  factory Roi.fromJson(Map<String, dynamic> json) {
-    final subregions = json[RegionFieldId.tableColumns.id] as List?;
-    if (subregions == null) {
-      return Roi(
-        field: RoiColumns.fromString(json[RegionFieldId.columnName.id]),
-        relativeX0: json[RegionFieldId.relativeX0.id] as double,
-        relativeY0: json[RegionFieldId.relativeY0.id] as double,
-        relativeX1: json[RegionFieldId.relativeX1.id] as double,
-        relativeY1: json[RegionFieldId.relativeY1.id] as double,
-      );
-    }
-
-    final coordinates = json[RegionFieldId.tableCoordinates.id];
-    return Roi(
-      field: RoiColumns.fromString(json[RegionFieldId.columnName.id]),
-      relativeX0: coordinates[RegionFieldId.relativeX0.id] as double,
-      relativeY0: coordinates[RegionFieldId.relativeY0.id] as double,
-      relativeX1: coordinates[RegionFieldId.relativeX1.id] as double,
-      relativeY1: coordinates[RegionFieldId.relativeY1.id] as double,
-      subregions: subregions.map((e) {
-        final region = Roi.fromJson(e);
-        return RoiDivision(
-          field: region.field,
-          relativeToRegionX0: region.relativeX1,
-          relativeToRegionY0: region.relativeY0,
-        );
-      }).toList(),
-    );
-  }
 
   final RoiColumns? field;
   final List<RoiDivision> subregions;
@@ -115,6 +87,35 @@ class Roi extends Equatable {
       relativeX1: relativeX1?.clamp(0, 1) ?? this.relativeX1,
       relativeY1: relativeY1?.clamp(0, 1) ?? this.relativeY1,
       subregions: subregions ?? this.subregions,
+    );
+  }
+
+  static Roi fromJson(Map<String, dynamic> json) {
+    final subregions = json[RegionFieldId.tableColumns.id] as List?;
+    if (subregions == null) {
+      return Roi(
+        field: RoiColumns.fromString(json[RegionFieldId.columnName.id]),
+        relativeX0: json[RegionFieldId.relativeX0.id] as double,
+        relativeY0: json[RegionFieldId.relativeY0.id] as double,
+        relativeX1: json[RegionFieldId.relativeX1.id] as double,
+        relativeY1: json[RegionFieldId.relativeY1.id] as double,
+      );
+    }
+
+    final coordinates = json[RegionFieldId.tableCoordinates.id];
+    final parentRegion = Roi(
+      field: RoiColumns.fromString(json[RegionFieldId.columnName.id]),
+      relativeX0: coordinates[RegionFieldId.relativeX0.id] as double,
+      relativeY0: coordinates[RegionFieldId.relativeY0.id] as double,
+      relativeX1: coordinates[RegionFieldId.relativeX1.id] as double,
+      relativeY1: coordinates[RegionFieldId.relativeY1.id] as double,
+    );
+
+    return parentRegion.copyWith(
+      subregions: subregions.mapIndexed((index, e) {
+        final region = Roi.fromJson(e);
+        return region.toDivision(region: parentRegion);
+      }).toList(),
     );
   }
 
@@ -227,6 +228,26 @@ extension RegionMutable on Roi {
       relativeY0: relativeY0,
       relativeX1: relativeX1_,
       relativeY1: relativeY1,
+    );
+  }
+
+  RoiDivision toDivision({
+    required Roi region,
+  }) {
+    double relativeToRegionX0 = relativeOriginX - region.relativeOriginX;
+    relativeToRegionX0 /= region.relativeWidth;
+
+    logger.wtf({
+      'relativeToRegionX0': relativeToRegionX0,
+      'relativeOriginX': relativeOriginX,
+      'region.relativeOriginX': region.relativeOriginX,
+      'region.relativeWidth': region.relativeWidth,
+    });
+
+    return RoiDivision(
+      field: region.field,
+      relativeToRegionX0: relativeToRegionX0,
+      relativeToRegionY0: 0.0,
     );
   }
 
