@@ -69,7 +69,7 @@ class _EditRegionDialog extends HookWidget {
     final formKey = useMemoized(() => GlobalKey<FormState>());
 
     final field_ = region.field;
-    final tableFields_ = region.divisions.map((e) => e.field).toList();
+    final tableFields_ = region.subregions.map((e) => e.field).toList();
 
     final field = useState<RoiColumns?>(field_);
     final tableFields = useState<List<RoiColumns?>>(tableFields_);
