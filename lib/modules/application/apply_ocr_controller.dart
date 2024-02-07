@@ -54,7 +54,7 @@ class ApplyOcrController extends _$ApplyOcrController {
       final newPath = '$tempDir'
           '${separator}AIS_MarkupExtractor'
           '${separator}input'
-          '$separator${pdf.name}';
+          '${separator}document.pdf';
 
       await pdf.copy(newPath);
 
