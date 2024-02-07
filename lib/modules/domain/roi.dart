@@ -233,7 +233,7 @@ extension RegionMutable on Roi {
   RoiDivision toDivision({
     required Roi region,
   }) {
-    double relativeToRegionX0 = relativeOriginX - region.relativeOriginX;
+    double relativeToRegionX0 = relativeX1 - region.relativeOriginX;
     relativeToRegionX0 /= region.relativeWidth;
 
     return RoiDivision(
