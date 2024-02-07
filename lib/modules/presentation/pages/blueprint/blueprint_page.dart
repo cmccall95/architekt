@@ -1,16 +1,20 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
-import 'package:arkitekt/core/config/logger_custom.dart';
-import 'package:arkitekt/modules/domain/roi_columns.dart';
+import 'package:arkitekt/modules/presentation/widgets/error_dialog.dart';
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pdfx/pdfx.dart';
 
+import '../../../../core/config/logger_custom.dart';
 import '../../../../core/config/routes.dart';
 import '../../../../core/utils/extensions/global_key.dart';
+import '../../../application/populate_extraction_controller.dart';
 import '../../../application/apply_ocr_controller.dart';
 import '../../../application/blueprint_pdf_controller.dart';
 import '../../../application/create_region_controller.dart';
@@ -18,6 +22,7 @@ import '../../../application/region_index_controller.dart';
 import '../../../application/region_list_controller.dart';
 import '../../../domain/a_i_s_table.dart';
 import '../../../domain/roi.dart';
+import '../../../domain/roi_columns.dart';
 import '../../widgets/async_helper.dart';
 import '../../widgets/drag_listener.dart';
 import '../../widgets/field_selector.dart';
@@ -39,25 +44,47 @@ class BlueprintPage extends ConsumerWidget {
 
   void _onApplyOcr({
     required BuildContext context,
+    required WidgetRef ref,
     required AsyncValue<List<AISTable>?> state,
   }) {
-    if (state is AsyncError) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text(state.error.toString()),
-          );
-        },
-      );
+    switch (state) {
+      case AsyncError(:final error):
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Failed to extract data'),
+              content: Text(error.toString()),
+            );
+          },
+        );
+      case AsyncData(:final value):
+        final provider = populateExtractionControllerProvider;
+        final notifier = ref.read(provider.notifier);
+        notifier.populateExtraction(
+          mtoData: value![0].data,
+          generalData: value[1].data,
+        );
     }
+  }
 
-    if (state is AsyncData) {
-      Navigator.of(context).pushNamed(
-        Routes.mtoTable,
-        arguments: state.value,
-      );
+  void _onAddMtos({
+    required BuildContext context,
+    required AsyncValue<void> state,
+  }) {
+    switch (state) {
+      case AsyncError(:final error):
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Failed to upload MTOs'),
+              content: Text(error.toString()),
+            );
+          },
+        );
+      case AsyncData():
+        Navigator.of(context).pushNamed(Routes.mtoTable);
     }
   }
 
@@ -66,6 +93,15 @@ class BlueprintPage extends ConsumerWidget {
     ref.listen(
       applyOcrControllerProvider,
       (_, state) => _onApplyOcr(
+        context: context,
+        ref: ref,
+        state: state,
+      ),
+    );
+
+    ref.listen(
+      populateExtractionControllerProvider,
+      (_, state) => _onAddMtos(
         context: context,
         state: state,
       ),

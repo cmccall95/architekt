@@ -1,4 +1,4 @@
-import 'package:arkitekt/modules/domain/a_i_s_data.dart';
+import 'package:arkitekt/modules/domain/mto.dart';
 
 class AISTable {
   AISTable({
@@ -10,10 +10,10 @@ class AISTable {
     final data = json['data'] as List;
     return AISTable(
       name: json['name'],
-      data: data.map((e) => AISData.fromJson(e)).toList(),
+      data: data.map((e) => Mto.fromJson(e)).toList(),
     );
   }
 
   final String name;
-  final List<AISData> data;
+  final List<Mto> data;
 }

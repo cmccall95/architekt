@@ -212,7 +212,7 @@ enum RoiColumns {
     defaultName: 'X-Ray',
   ),
   bom(
-    fieldId: 'BOM',
+    fieldId: 'bom',
     defaultName: 'BOM',
   ),
   spec(
@@ -288,7 +288,7 @@ enum RoiColumns {
       'vendor_document_id' => RoiColumns.vendorDocumentId,
       'weld_id' => RoiColumns.weldId,
       'xray' => RoiColumns.xray,
-      'BOM' => RoiColumns.bom,
+      'bom' => RoiColumns.bom,
       'spec' => RoiColumns.spec,
       'fab' => RoiColumns.fab,
       _ => RoiColumns.drawing,

@@ -1,18 +1,20 @@
 part of 'table_custom.dart';
 
-class TableCustomHeader extends StatelessWidget {
+class TableCustomHeader<C> extends StatelessWidget {
   const TableCustomHeader({
     super.key,
     required this.horizontalScrollController,
     required this.columns,
-    this.sort,
-    this.onSort,
+    this.orderBy,
+    this.onOrderByChanged,
+    this.cellBuilder,
   });
 
   final ScrollController horizontalScrollController;
-  final List<MtoColumns> columns;
-  final OrderBy? sort;
-  final ValueChanged<OrderBy>? onSort;
+  final List<C> columns;
+  final OrderBy<C>? orderBy;
+  final void Function(OrderBy<C> orderBy)? onOrderByChanged;
+  final String Function(C column)? cellBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +33,11 @@ class TableCustomHeader extends StatelessWidget {
             );
           }
 
-          final column = columns[index];
-
+          final column = columns[index - 1];
           Widget? sortingIndicator;
-          if (sort != null && sort!.column == column) {
+          if (orderBy != null && orderBy!.column == column) {
             sortingIndicator = Icon(
-              sort!.ascending
+              orderBy!.ascending
                   ? Icons.arrow_upward_rounded
                   : Icons.arrow_downward_rounded,
               size: Theme.of(context).textTheme.bodyMedium?.fontSize,
@@ -46,11 +47,11 @@ class TableCustomHeader extends StatelessWidget {
           return TableCustomCell(
             onTap: () {
               var ascending = true;
-              if (sort != null && sort!.column == column) {
-                ascending = !sort!.ascending;
+              if (orderBy != null && orderBy!.column == column) {
+                ascending = !orderBy!.ascending;
               }
 
-              onSort?.call((
+              onOrderByChanged?.call((
                 column: column,
                 ascending: ascending,
               ));
@@ -62,7 +63,7 @@ class TableCustomHeader extends StatelessWidget {
                   const SizedBox(width: 4),
                 ],
                 Text(
-                  column.displayName,
+                  cellBuilder?.call(column) ?? '$column',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),

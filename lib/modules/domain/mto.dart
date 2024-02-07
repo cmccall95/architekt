@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import 'mto_columns.dart';
 
-class AISData extends Equatable {
-  const AISData({
+class Mto extends Equatable {
+  const Mto({
     this.drawing,
     this.sheet,
     this.ofSheet,
@@ -60,6 +60,23 @@ class AISData extends Equatable {
     this.sysBuild,
     this.sysFilename,
     this.sysPath,
+    this.generalCategory,
+    this.rfqScope,
+    this.size1,
+    this.size2,
+    this.schedule,
+    this.rating,
+    this.astm,
+    this.grade,
+    this.asmeAnsi,
+    this.material,
+    this.coating,
+    this.forging,
+    this.ends,
+    this.weldType,
+    this.additionalInformation,
+    this.excludeFromRfq,
+    this.takeoffNotes,
   });
 
   final String? drawing;
@@ -118,6 +135,23 @@ class AISData extends Equatable {
   final String? sysBuild;
   final String? sysFilename;
   final String? sysPath;
+  final String? generalCategory;
+  final String? rfqScope;
+  final String? size1;
+  final String? size2;
+  final String? schedule;
+  final String? rating;
+  final String? astm;
+  final String? grade;
+  final String? asmeAnsi;
+  final String? material;
+  final String? coating;
+  final String? forging;
+  final String? ends;
+  final String? weldType;
+  final String? additionalInformation;
+  final String? excludeFromRfq;
+  final String? takeoffNotes;
 
   String? dataFromField(MtoColumns field) {
     return switch (field) {
@@ -177,11 +211,28 @@ class AISData extends Equatable {
       MtoColumns.sysBuild => sysBuild,
       MtoColumns.sysFilename => sysFilename,
       MtoColumns.sysPath => sysPath,
+      MtoColumns.generalCategory => generalCategory,
+      MtoColumns.rfqScope => rfqScope,
+      MtoColumns.size1 => size1,
+      MtoColumns.size2 => size2,
+      MtoColumns.schedule => schedule,
+      MtoColumns.rating => rating,
+      MtoColumns.astm => astm,
+      MtoColumns.grade => grade,
+      MtoColumns.asmeAnsi => asmeAnsi,
+      MtoColumns.material => material,
+      MtoColumns.coating => coating,
+      MtoColumns.forging => forging,
+      MtoColumns.ends => ends,
+      MtoColumns.weldType => weldType,
+      MtoColumns.additionalInformation => additionalInformation,
+      MtoColumns.excludeFromRfq => excludeFromRfq,
+      MtoColumns.takeoffNotes => takeoffNotes,
     };
   }
 
-  static AISData fromJson(Map<String, dynamic> json) {
-    return AISData(
+  static Mto fromJson(Map<String, dynamic> json) {
+    return Mto(
       drawing: json[MtoColumns.drawing.fieldId],
       sheet: json[MtoColumns.sheet.fieldId],
       ofSheet: json[MtoColumns.ofSheet.fieldId],
@@ -299,6 +350,23 @@ class AISData extends Equatable {
       MtoColumns.sysBuild.fieldId: sysBuild,
       MtoColumns.sysFilename.fieldId: sysFilename,
       MtoColumns.sysPath.fieldId: sysPath,
+      MtoColumns.generalCategory.fieldId: generalCategory,
+      MtoColumns.rfqScope.fieldId: rfqScope,
+      MtoColumns.size1.fieldId: size1,
+      MtoColumns.size2.fieldId: size2,
+      MtoColumns.schedule.fieldId: schedule,
+      MtoColumns.rating.fieldId: rating,
+      MtoColumns.astm.fieldId: astm,
+      MtoColumns.grade.fieldId: grade,
+      MtoColumns.asmeAnsi.fieldId: asmeAnsi,
+      MtoColumns.material.fieldId: material,
+      MtoColumns.coating.fieldId: coating,
+      MtoColumns.forging.fieldId: forging,
+      MtoColumns.ends.fieldId: ends,
+      MtoColumns.weldType.fieldId: weldType,
+      MtoColumns.additionalInformation.fieldId: additionalInformation,
+      MtoColumns.excludeFromRfq.fieldId: excludeFromRfq,
+      MtoColumns.takeoffNotes.fieldId: takeoffNotes,
     };
   }
 
@@ -361,6 +429,23 @@ class AISData extends Equatable {
       sysBuild,
       sysFilename,
       sysPath,
+      generalCategory,
+      rfqScope,
+      size1,
+      size2,
+      schedule,
+      rating,
+      astm,
+      grade,
+      asmeAnsi,
+      material,
+      coating,
+      forging,
+      ends,
+      weldType,
+      additionalInformation,
+      excludeFromRfq,
+      takeoffNotes,
     ];
   }
 

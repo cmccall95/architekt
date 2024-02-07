@@ -46,6 +46,7 @@ dependencies:
   flutter_riverpod: ^2.4.9
   riverpod_annotation: ^2.3.3
   hooks_riverpod: ^2.4.9
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'a_i_s_data.dart';
+import 'mto.dart';
 
 class AISTableData extends Equatable {
   const AISTableData({
@@ -9,7 +9,7 @@ class AISTableData extends Equatable {
   });
 
   final int id;
-  final AISData data;
+  final Mto data;
 
   String? get drawing => data.drawing;
   String? get sheet => data.sheet;
@@ -71,7 +71,7 @@ class AISTableData extends Equatable {
   static AISTableData fromJson(Map<String, dynamic> json) {
     return AISTableData(
       id: json['id'],
-      data: AISData.fromJson(json),
+      data: Mto.fromJson(json),
     );
   }
 
