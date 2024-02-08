@@ -457,6 +457,12 @@ enum MtoColumns {
     displayName: 'Average Elevation',
     scope: [MtoFieldScope.general],
   ),
+  pdfPage(
+    fieldId: 'pdf_page',
+    defaultName: 'PDF Page',
+    displayName: 'PDF Page',
+    scope: [MtoFieldScope.general],
+  ),
   ;
 
   const MtoColumns({
@@ -549,6 +555,7 @@ enum MtoColumns {
       'max_elevation' => MtoColumns.maxElevation,
       'min_elevation' => MtoColumns.minElevation,
       'average_elevation' => MtoColumns.averageElevation,
+      'pdf_page' => MtoColumns.pdfPage,
       _ => MtoColumns.drawing,
     };
   }

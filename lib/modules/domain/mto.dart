@@ -80,6 +80,7 @@ class Mto extends Equatable {
     this.maxElevation,
     this.minElevation,
     this.averageElevation,
+    this.pdfPage,
   });
 
   final String? drawing;
@@ -158,6 +159,7 @@ class Mto extends Equatable {
   final String? maxElevation;
   final String? minElevation;
   final String? averageElevation;
+  final int? pdfPage;
 
   String? dataFromField(MtoColumns field) {
     return switch (field) {
@@ -237,6 +239,7 @@ class Mto extends Equatable {
       MtoColumns.maxElevation => maxElevation,
       MtoColumns.minElevation => minElevation,
       MtoColumns.averageElevation => averageElevation,
+      MtoColumns.pdfPage => pdfPage.toString(),
     };
   }
 
@@ -318,6 +321,7 @@ class Mto extends Equatable {
       maxElevation: json[MtoColumns.maxElevation.fieldId],
       minElevation: json[MtoColumns.minElevation.fieldId],
       averageElevation: json[MtoColumns.averageElevation.fieldId],
+      pdfPage: json[MtoColumns.pdfPage.fieldId],
     );
   }
 
@@ -399,6 +403,7 @@ class Mto extends Equatable {
       MtoColumns.maxElevation.fieldId: maxElevation,
       MtoColumns.minElevation.fieldId: minElevation,
       MtoColumns.averageElevation.fieldId: averageElevation,
+      MtoColumns.pdfPage.fieldId: pdfPage,
     };
   }
 
@@ -481,6 +486,7 @@ class Mto extends Equatable {
       maxElevation,
       minElevation,
       averageElevation,
+      pdfPage,
     ];
   }
 
