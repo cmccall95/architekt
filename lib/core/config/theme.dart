@@ -11,6 +11,11 @@ final theme = ThemeData(
       color: Colors.black,
     ),
   ),
+  inputDecorationTheme: const InputDecorationTheme(
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(4)),
+    ),
+  ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       elevation: 0,

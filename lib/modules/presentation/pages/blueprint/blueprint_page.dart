@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:arkitekt/modules/presentation/widgets/error_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +13,10 @@ import 'package:pdfx/pdfx.dart';
 import '../../../../core/config/logger_custom.dart';
 import '../../../../core/config/routes.dart';
 import '../../../../core/utils/extensions/global_key.dart';
-import '../../../application/populate_extraction_controller.dart';
 import '../../../application/apply_ocr_controller.dart';
 import '../../../application/blueprint_pdf_controller.dart';
 import '../../../application/create_region_controller.dart';
+import '../../../application/populate_extraction_controller.dart';
 import '../../../application/region_index_controller.dart';
 import '../../../application/region_list_controller.dart';
 import '../../../domain/a_i_s_table.dart';
@@ -25,7 +24,9 @@ import '../../../domain/roi.dart';
 import '../../../domain/roi_columns.dart';
 import '../../widgets/async_helper.dart';
 import '../../widgets/drag_listener.dart';
+import '../../widgets/error_dialog.dart';
 import '../../widgets/field_selector.dart';
+import '../projects/presentation/widgets/add_project_dialog.dart';
 import 'widgets/blueprint_footer.dart';
 
 part 'widgets/_canvas.dart';
@@ -39,7 +40,7 @@ part 'widgets/_region_list_tile.dart';
 part 'widgets/_region_painter.dart';
 part 'widgets/_region_preview.dart';
 
-class BlueprintPage extends ConsumerWidget {
+class BlueprintPage extends HookConsumerWidget {
   const BlueprintPage({Key? key}) : super(key: key);
 
   void _onApplyOcr({
@@ -106,6 +107,14 @@ class BlueprintPage extends ConsumerWidget {
         state: state,
       ),
     );
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        AddProjectDialog.show(context);
+      });
+
+      return null;
+    }, const []);
 
     return AsyncHelper(
       loadingProviders: [applyOcrControllerProvider],
