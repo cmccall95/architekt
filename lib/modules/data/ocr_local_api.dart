@@ -32,6 +32,7 @@ class OcrLocalApi {
       for (var columnInfo in tableInfo) {
         final columnName = columnInfo['name'];
 
+        if (columnName == "id") continue;
         if (columnName == MtoColumns.sysBuild.fieldId) continue;
         if (columnName == MtoColumns.sysFilename.fieldId) continue;
         if (columnName == MtoColumns.sysPath.fieldId) continue;
@@ -63,6 +64,7 @@ class OcrLocalApi {
       for (var columnInfo in tableInfo) {
         final columnName = columnInfo['name'];
 
+        if (columnName == "id") continue;
         if (columnName == MtoColumns.sysBuild.fieldId) continue;
         if (columnName == MtoColumns.sysFilename.fieldId) continue;
         if (columnName == MtoColumns.sysPath.fieldId) continue;
