@@ -32,6 +32,11 @@ class OcrLocalApi {
       for (var columnInfo in tableInfo) {
         final columnName = columnInfo['name'];
 
+        if (columnName == MtoColumns.sysBuild.fieldId) continue;
+        if (columnName == MtoColumns.sysFilename.fieldId) continue;
+        if (columnName == MtoColumns.sysPath.fieldId) continue;
+        if (columnName == MtoColumns.coordinate.fieldId) continue;
+
         final count = Sqflite.firstIntValue(await db.rawQuery('''
           SELECT COUNT(*) FROM ${DBTables.mto.value} WHERE $columnName IS NOT NULL
         '''));
@@ -57,6 +62,11 @@ class OcrLocalApi {
       List<MtoColumns> columnsWithValues = [];
       for (var columnInfo in tableInfo) {
         final columnName = columnInfo['name'];
+
+        if (columnName == MtoColumns.sysBuild.fieldId) continue;
+        if (columnName == MtoColumns.sysFilename.fieldId) continue;
+        if (columnName == MtoColumns.sysPath.fieldId) continue;
+        if (columnName == MtoColumns.coordinate.fieldId) continue;
 
         final count = Sqflite.firstIntValue(await db.rawQuery('''
           SELECT COUNT(*) FROM ${DBTables.generalData.value} WHERE $columnName IS NOT NULL
